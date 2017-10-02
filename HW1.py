@@ -5,6 +5,7 @@ import pdb
 import copy
 import csv
 import matplotlib.pyplot as plt
+from multiprocessing import Process
 
 
 class NN(object):
@@ -154,6 +155,12 @@ class makePlots(object):
 		self.partC()
 		self.partE()
 
+	def NN_all(self):
+		nn = NN(self.data.data[0], self.data.y[0], hidden=hidden)
+		acc = nn.epochs_train(self.EPOCH, self.data.data, self.data.y, self.test_datas[0].data, self.test_datas[0].y)
+				
+
+
 	def partA(self):
 		# for part A - change hidden units
 		for hidden in self.hidden_units:
@@ -226,7 +233,10 @@ class makePlots(object):
 				for row in reader:
 					mean.append(np.mean(np.array(row).astype(float)))
 					stdev.append(np.std(np.array(row).astype(float)))
-			plt.errorbar(range(len(mean)), mean, yerr=stdev,label=h,fmt=m[-1])
+			plot_pts_freq = 20
+			plot_mean = mean[::plot_pts_freq]
+			plot_stdev = stdev[::plot_pts_freq]
+			plt.errorbar(range(0,len(mean),plot_pts_freq), plot_mean, yerr=plot_stdev,label=h,fmt=m[-1])
 		plt.legend()
 		plt.savefig(self.save_dir+'/hidden_units.png')
 		plt.close()
@@ -243,7 +253,10 @@ class makePlots(object):
 				for row in reader:
 					mean.append(np.mean(np.array(row).astype(float)))
 					stdev.append(np.std(np.array(row).astype(float)))
-			plt.errorbar(range(len(mean)), mean, yerr=stdev,label=e,fmt=m[-1])
+			plot_pts_freq = 20
+			plot_mean = mean[::plot_pts_freq]
+			plot_stdev = stdev[::plot_pts_freq]
+			plt.errorbar(range(0,len(mean),plot_pts_freq), plot_mean, yerr=plot_stdev,label=e,fmt=m[-1])
 		plt.legend()
 		plt.savefig(self.save_dir+'/epochs.png')
 		plt.close()
@@ -260,7 +273,10 @@ class makePlots(object):
 				for row in reader:
 					mean.append(np.mean(np.array(row).astype(float)))
 					stdev.append(np.std(np.array(row).astype(float)))
-			plt.errorbar(range(len(mean)), mean, yerr=stdev,label=lr,fmt=m[-1])
+			plot_pts_freq = 20
+			plot_mean = mean[::plot_pts_freq]
+			plot_stdev = stdev[::plot_pts_freq]
+			plt.errorbar(range(0,len(mean),plot_pts_freq), plot_mean, yerr=plot_stdev,label=lr,fmt=m[-1])
 		plt.legend()
 		plt.savefig(self.save_dir+'/learning_rate.png')
 		plt.close()
@@ -279,7 +295,10 @@ class makePlots(object):
 				for row in reader:
 					mean.append(np.mean(np.array(row).astype(float)))
 					stdev.append(np.std(np.array(row).astype(float)))
-			plt.errorbar(range(len(mean)), mean, yerr=stdev,label=d,fmt=m[-1])
+			plot_pts_freq = 20
+			plot_mean = mean[::plot_pts_freq]
+			plot_stdev = stdev[::plot_pts_freq]
+			plt.errorbar(range(len(plot_mean)), plot_mean, yerr=plot_stdev,label=d,fmt=m[-1])
 		plt.legend()
 		plt.savefig(self.save_dir+'/data_sets.png')
 		plt.close()
@@ -288,8 +307,8 @@ class makePlots(object):
 if __name__ == '__main__':
 	mp1 = makePlots(fn='train1.csv')
 	mp2 = makePlots(fn='train2.csv')
-	mp1.recordData('train1')
-	mp2.recordData('train2')
+	# mp1.recordData('train1')
+	# mp2.recordData('train2')
 	mp1.plotData('train1')
 	mp2.plotData('train2')
 	'''
