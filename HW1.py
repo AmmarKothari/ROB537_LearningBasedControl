@@ -338,8 +338,9 @@ class makePlots(object):
 			# plot_mean = mean[::plot_pts_freq]
 			# plot_stdev = stdev[::plot_pts_freq]
 			# plt.errorbar(range(0,len(mean),plot_pts_freq), plot_mean, yerr=plot_stdev,label=h,fmt=m[-1])
-			plot_first_pts = 15
+			plot_first_pts = 30
 			plt.errorbar(range(0,plot_first_pts), mean[:plot_first_pts], yerr=stdev[:plot_first_pts],label=h,fmt='--'+m[-1])
+
 		plt.legend()
 		plt.xlabel('Epochs')
 		plt.ylabel('Accuracy')
@@ -358,9 +359,9 @@ class makePlots(object):
 				for row in reader:
 					mean.append(np.mean(np.array(row).astype(float)))
 					stdev.append(np.std(np.array(row).astype(float)))
-			first_pts = 25
-			rem_pts = 10
-			plot_pts = np.hstack((np.arange(0,first_pts),np.linspace(first_pts, len(mean)-1, rem_pts).astype(int)))
+			pts = 25
+			plot_pts = np.linspace(0, len(mean)-1, pts).astype(int)
+			plot_pts = np.unique(np.logspace(0, np.log10(len(mean)-1), pts).astype(int))
 			plot_mean = [mean[i] for i in plot_pts]
 			plot_stdev = [stdev[i] for i in plot_pts]
 			plt.errorbar(plot_pts, plot_mean, yerr=plot_stdev,label=e,fmt='--'+m[-1])
@@ -386,6 +387,8 @@ class makePlots(object):
 			plot_first_pts = 15
 			plt.errorbar(range(0,plot_first_pts), mean[:plot_first_pts], yerr=stdev[:plot_first_pts],label=lr,fmt='--'+m[-1])
 		plt.legend()
+		plt.xlabel('Epochs')
+		plt.ylabel('Accuracy')
 		plt.savefig(self.save_dir+'/learning_rate.png')
 		plt.close()
 
@@ -404,6 +407,8 @@ class makePlots(object):
 			plot_first_pts = 15
 			plt.errorbar(range(0,plot_first_pts), mean[:plot_first_pts], yerr=stdev[:plot_first_pts],label=w,fmt='--'+m[-1])
 		plt.legend()
+		plt.xlabel('Epochs')
+		plt.ylabel('Accuracy')
 		plt.savefig(self.save_dir+'/weights.png')
 		plt.close()
 
@@ -419,11 +424,13 @@ class makePlots(object):
 				for row in reader:
 					mean.append(np.mean(np.array(row).astype(float)))
 					stdev.append(np.std(np.array(row).astype(float)))
-			plot_pts = np.arange(0,60,5)
+			plot_pts = np.arange(0,100,5)
 			plot_mean = [mean[i] for i in plot_pts]
 			plot_stdev = [stdev[i] for i in plot_pts]
 			plt.errorbar(plot_pts, plot_mean, yerr=plot_stdev,label=d,fmt='--'+m[-1])
 		plt.legend()
+		plt.xlabel('Epochs')
+		plt.ylabel('Accuracy')
 		plt.savefig(self.save_dir+'/data_sets.png')
 		plt.close()
 			
@@ -445,18 +452,20 @@ if __name__ == '__main__':
 	# mp2.partA_multiP()
 	# mp2.partB_multiP()
 	# mp2.partC_multiP()
+	# mp2.partD_multiP()
 	# mp2.partE_multiP()
 	
-	# mp1.plotA()
-	# mp1.plotB()
-	# mp1.plotC()
+	mp1.plotA()
+	mp1.plotB()
+	mp1.plotC()
 	mp1.plotD()
-	# mp1.plotE()
+	mp1.plotE()
 
-	# mp2.plotA()
-	# mp2.plotB()
-	# mp2.plotC()
-	# mp2.plotE()
+	mp2.plotA()
+	mp2.plotB()
+	mp2.plotC()
+	mp2.plotD()
+	mp2.plotE()
 
 
 

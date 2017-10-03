@@ -26,7 +26,7 @@ The size of the learning rate affects how quickly the classifier converges.  Wit
 \subsection{Part D}
 I found an interesting bug (feature?) in Python when using multiprocessing.  The cause (I think) is that because the processes spawn so quickly, they all use the same machine time to generate their random weight initializations.  This results in all of the newtorks having the same results.  This is even more surprising since the data is shuffled for every epoch.  I believe that again the shuffling was happening the same for all of the trials.  I was eventually able to cause the weights to be different by seeding the generator with different values for each trial.  An intersting problem that only occurs when using multiprocessing.
 
-Some other parameters that the can change convergence time and network performance are the initialization weights of the network and shuffling the data during processing.
+Some other parameters that the can change convergence time and network performance are the initialization weights of the network and shuffling the data during processing.  I examined how initialization of the weights affects the algorithm.  The legend shows the magnitude of the initial values.  For very small magnitudes of initial weights, the network does not change much over the course of training.  It always predicts the same value which results in 50\% accuracy because of the distribution of the testing set.  For very large values, numerical saturation occurs and the network begins to output NaNs which are always classified as incorrect.  This results in 0\% success.  
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.6\textwidth]{../train1/weights.png}
