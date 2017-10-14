@@ -1,0 +1,79 @@
+%!TEX root = HW2.tex
+
+
+
+
+
+\section{Algorithm Explanation}
+\subsection{Simulated Annealing}
+% In this work, a basic version of Simulated Annealing is implementated.  
+\begin{itemize}
+\item s = InitialGuess()
+\item For i < TOTALITERATIONS:
+	\begin{itemize}
+	\item sNew = NeighborSol(s)
+	\item s = TempSelect(s, sNew, Temp)
+	\item DecreaseTemp(Temp)
+	\end{itemize}
+\item FinalSolution = s
+\end{itemize}
+
+\textbf{InitialGuess} -- Intial solution generated randomly \\
+\textbf{TOTALITERATIONS} -- Number of solutions to try \\
+\textbf{NeighborSol} -- Generate a succesor state to $s$ by switching the order of two adjacent cities in $s$ \\
+\textbf{TempSelect} -- Selects a solution between the two presented based on the temperature.  The best solution is probabilistically choosen based on the temperature.  The higher the temperature the more likely the next solution is choosen at random. \\
+\textbf{DecreaseTemp} -- Decrases the temperature such that it ends at 0 (always choosing the better solution) when the maximum number of iterations is reached. 
+
+\subsection{Evolutionary Algorithm}
+% In this work, a 
+\begin{itemize}
+	\item POP = InitialGuess(POP\_TOT)
+	\item For i < TOTALITERATIONS:
+		\begin{itemize}
+			\item POP\_SEL = ChooseParents(POP)
+			\item CHILD = PerturbPopulation(POP\_SEL)
+			\item POP = SelectPop(CHILD, POP)
+		\end{itemize}
+	Soltuion = Min\_Value(Pop)
+\end{itemize}
+
+\textbf{InitialGuess} -- Initial population of solutions generated randomly \\
+\textbf{TOTALITERATIONS} -- Number of generations \\
+\textbf{ChooseParents} -- Epsilon-greedy choose best solutions in population based on some amount of noise \\
+\textbf{PerturbPopulation} -- Finds neighbor solutions based on choosen parents.  The amount of variation to original solution is based on an amount of noise.  Variation is implemented as the number of switches between neighboring cities in a solution.  Higher noise means more neighboring cities will be switched. \\
+\textbf{SelectPop} -- Choose the best solutions from the original population and mutated children.  The resulting number of solutions is equal to the starting population size. \\
+\textbf{Min\_Value} -- From a given population, returns the member that has the best solution value. \\
+
+In this assignment, Population size was 10.  Number of children produced each round was 5.  Noise was decreased from 1 to 0 based on current iteration number.  For this algorithm, the total number of iterations was choosen as 1,000.  This is ten times less than the other two approaches in order to have a similar number of total generated solutions.  
+
+\subsection{Monte Carlo Tree Search}
+The implementation used in this assignment is not optimized.  As a result, it has slow run times but is able to find solutions. \\
+\textbf{Main Algorithm}
+\begin{itemize}
+	\item InitializeTree()
+	\item For i < TOTALITERATIONS:
+		\begin{itemize}
+			\item Parent = PickParent(Tree)
+			\item Node = PickChild(Parent)
+			\item Leaf\_Value = DescendTree(Node)
+			\item BackPropogateValue(Leaf\_Value)
+		\end{itemize}
+\end{itemize}
+
+\textbf{DescendTree}
+\begin{itemize}
+	\item If Node has Children
+	\begin{itemize}
+		\item Node = PickChild(Node)
+		\item DescendTree(Node)
+	\end{itemize}
+	\item Else: PlayOut()
+\end{itemize}
+
+\textbf{InitializeTree} -- Initializes tree structure.  Nodes are initialized with best value to promote exploration. \\
+\textbf{TOTALITERATIONS} -- Number of solutions to try \\
+\textbf{PickParent} -- Probabilistically chooses the first node of the tree based on value. \\
+\textbf{PickChild} -- Probabilitically choose a child from a node.  If the node does not exist, create it. \\
+\textbf{DescendTree} -- Subfunction that continues to descend the tree in a probablisitic manner based on node value \\
+\textbf{PlayOut} -- Determines value of a node on its first visit.  The remaining cities are choosen at random to create a valid path.  Returns the value of the full path. \\
+\textbf{BackPropogateValue} -- Value of the current node is pushed to the parent.  The parent adds the new value to its current value based on the total number of visits.  For example, if a parent has been visited once before, then $(Old\_Value * Number\_Of\_Visits + New\_Child\_Value) / (Number\_Of\_Visits + 1)$.  This is effectively an average value of the node based on all explored solutions.  A node with a good value is more likely to lead to a good solution than a node with a worse value.

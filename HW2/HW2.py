@@ -9,8 +9,10 @@ import matplotlib.pyplot as plt
 import copy
 import time
 from collections import defaultdict
+from multiprocessing import Process
 ITER_LIMIT = 100000
 REPEAT = 10
+ITERATIONS = int(1e4)
 
 class fileReader(object):
 	def __init__(self, fn):
@@ -59,15 +61,16 @@ class fileReader(object):
 		return sol_list
 
 
-	def plotSolution(self, sol):
-		f,ax = plt.subplots(1,1)
+	def plotSolution(self, sol, ax = None, show = True):
+		if ax is None: f,ax = plt.subplots(1,1)
 		self.plotPoints(show = False, ax = ax)
 		sol_list = self.get_sol_list(sol)
 		for c1,c2 in sol_list:
 			x1,y1 = self.cities[c1]
 			x2,y2 = self.cities[c2]
 			ax.arrow(x1,y1, x2-x1, y2-y1, head_width = 20)
-		plt.show()
+		if show: plt.show()
+		return ax
 
 	# def plotMultipleSolutions(self, sol):
 
@@ -107,11 +110,6 @@ class SimulatedAnnealing(GenerateSolution):
 	def __init__(self, distanceMatrix):
 		super(SimulatedAnnealing, self).__init__(distanceMatrix)
 
-	# def generator(self, n, limit = ITER_LIMIT):
-	# 	for iL in range(limit):
-	# 		sol = [np.random.permutation(self.sol_length) for iN in range(n)]
-	# 		yield sol
-
 	def neighbor_sol(self, orig_sol):
 		#randomly switch two successive states
 		sol = copy.deepcopy(orig_sol)
@@ -149,6 +147,7 @@ class SimulatedAnnealing(GenerateSolution):
 	def findSolution(self, N = 100):
 		s = self.initialGuess()
 		scores = []
+		sols = []
 		for i in range(N):
 			s_neighbor = self.neighbor_sol(s)
 			s_score = self.evaluate(s)
@@ -157,9 +156,10 @@ class SimulatedAnnealing(GenerateSolution):
 			# print('Current Temp: %s,' %((N-i)/N))
 			s_choosen = self.accept(s_list, (N-i), N)
 			s = s_choosen[0]
+			sols.append(copy.deepcopy(s))
 			scores.append(s_choosen[1])
 		print('Solution: %s' %s)
-		return scores, s_choosen
+		return scores, sols
 
 	def plotSearch(self, scores):
 		f,ax = plt.subplots(1,1)
@@ -365,16 +365,11 @@ class MonteCarloTreeSearch(SimulatedAnnealing):
 			sol_list.append(self.best_solution)
 		return scores, sol_list
 
-
-
-
-
 class PlotsForHomework(object):
 	def __init__(self):
 		self.fn_list = ['hw2.data/%scities.csv' %(i) for i in (15,25,100)]
 		self.fn_list.append('hw2.data/25cities_A.csv')
 		self.scenarios = ['15', '25', '100', '25A']
-
 
 	def plotOriginalData(self):
 		for fn in self.fn_list:
@@ -400,10 +395,11 @@ class PlotsForHomework(object):
 		ax.get_figure().savefig('SimulatedAnnealing_Single.png')
 
 	def SASolutions_multiple(self):
+		print('Simulated Annealing Solution')
 		scores_all = []
 		times_all = []
-		N = 10000
-		for fn in self.fn_list:
+		N = ITERATIONS
+		for fn,sc in zip(self.fn_list, self.scenarios):
 			scores = []
 			sols = []
 			times = []
@@ -417,14 +413,14 @@ class PlotsForHomework(object):
 				sols.append(sol)
 			scores_all.append(scores)
 			times_all.append(times)
-			with open(fn.replace('hw2.data/','SA_Results/').replace('.','_score.'),'wb') as csvfile:
+			with open('SA_Results/%scities_%s.csv' %(sc,'score'),'wb') as csvfile:
 				writer = csv.writer(csvfile)
 				[writer.writerow(s) for s in np.array(scores).T]
-			with open(fn.replace('hw2.data/', 'SA_Results/').replace('.','_sol.'), 'wb') as csvfile:
-				writer = csv.writer(csvfile)
-				for s in np.array(sols):
-					writer.writerow(np.append(s[0], s[1]))
-			with open(fn.replace('hw2.data/','SA_Results/').replace('.','_time.'),'wb') as csvfile:
+			for i,s_i in enumerate(sols):
+				with open('SA_Results/%scities_%s_%s.csv' %(sc,'sols',i),'wb') as csvfile:
+					writer = csv.writer(csvfile)
+					[writer.writerow(s) for s in s_i]
+			with open('SA_Results/%scities_%s.csv' %(sc,'time'),'wb') as csvfile:
 				writer = csv.writer(csvfile)
 				[writer.writerow([s]) for s in np.array(times).T]
 		# avg = [np.mean(s,axis = 0) for s in scores_all]
@@ -454,9 +450,9 @@ class PlotsForHomework(object):
 					scores.append(row)
 
 	def EASolution(self):
-		N = 1000
 		P = 10
 		M = 5
+		N = ITERATIONS/(P)
 		scores = []
 		for fn in self.fn_list:
 			F = fileReader(fn)
@@ -469,11 +465,13 @@ class PlotsForHomework(object):
 			plt.show()
 
 	def EASolutions_multiple(self):
-		N = 1000
+		print('Solving With Evolutionary Algorithm')
 		P = 10
 		M = 5
-		for fn in self.fn_list:
+		N = int(ITERATIONS/M)
+		for fn,sc in zip(self.fn_list, self.scenarios):
 			scores = []
+			max_scores = []
 			times = []
 			sols = []
 			for i in range(REPEAT):
@@ -483,23 +481,30 @@ class PlotsForHomework(object):
 				s,sol = EA.findSolution(Pop_total = P, Mutations = M, N = N)
 				times.append(time.time() - start_time)
 				scores.append(s)
+				max_scores.append([max(all_s) for all_s in s])
 				sols.append(sol)
 
 				for s_i in scores:
-					with open(fn.replace('hw2.data/','EA_Results/').replace('.','_scores_%s.' %i),'wb') as csvfile:
+					with open('EA_Results/%scities_%s_%s.csv' %(sc,'scores',i),'wb') as csvfile:
 						writer = csv.writer(csvfile)
 						[writer.writerow(s) for s in np.array(s_i)]
+			with open('EA_Results/%scities_%s.csv' %(sc,'score'),'wb') as csvfile:
+				writer = csv.writer(csvfile)
+				[writer.writerow(s) for s in np.array(max_scores).T]
 
-			with open(fn.replace('hw2.data/','EA_Results/').replace('.','_sols.'),'wb') as csvfile:
+			with open('EA_Results/%scities_%s.csv' %(sc,'sols'),'wb') as csvfile:
+				if '..' in csvfile.name:
+					pdb.set_trace()
 				writer = csv.writer(csvfile)
 				for s in np.array(sols):
 					writer.writerow(np.append(s[0], s[1]))
-			with open(fn.replace('hw2.data/','EA_Results/').replace('.','_time.'),'wb') as csvfile:
+			with open('EA_Results/%scities_%s.csv' %(sc,'time'),'wb') as csvfile:
 				writer = csv.writer(csvfile)
 				[writer.writerow([s]) for s in np.array(times).T]
 
 	def MCTSSoltuions_multiple(self):
-		N = int(1e5)
+		print('Solving with MCTS')
+		N = ITERATIONS
 		for fn,sc in zip(self.fn_list, self.scenarios):
 			scores = []
 			times = []
@@ -521,7 +526,91 @@ class PlotsForHomework(object):
 					[writer.writerow(s) for s in s_i]
 			with open('MCTS_Results/%scities_%s.csv' %(sc,'time'),'wb') as csvfile:
 				writer = csv.writer(csvfile)
-				[writer.writerow(s) for t in times]
+				[writer.writerow([t]) for t in times]
+
+	def CitiesResults(self):
+		for fn_prefix,data_file in zip(self.scenarios,self.fn_list):
+			# prints out results from 15 cities test for each algorithm
+			folders = ['%s_Results/' %i for i in ('SA','EA','MCTS')]
+			# folders = ['%s_Results/' %i for i in ('SA','MCTS')]
+			time_fn = '%scities_time.csv' %fn_prefix
+			times_all = []
+			for folder in folders:
+				with open(folder + time_fn, 'rb') as csvfile:
+					reader = csv.reader(csvfile)
+					time_scenario = [float(row[0]) for row in reader]
+					print(folder)
+					print('Mean:%0.4f, StDev:%0.4f' %(np.mean(time_scenario), np.std(time_scenario)))
+				times_all.append(time_scenario)
+
+			##### City Graphs #####
+			solution_fn = '%scities_score.csv' %fn_prefix
+			f1,ax1 = plt.subplots(1,1)
+			n = int(1e2)
+			formats = ['rx', 'bo', 'g*']
+			for folder,fmt in zip(folders, formats):
+				scores = []
+				with open(folder + solution_fn, 'rb') as csvfile:
+					reader = csv.reader(csvfile)
+					for row in reader:
+						scores.append([float(r) for r in row])
+					print(folder)
+					print('Final Score: %0.2f, StDev: %0.2f' %(np.mean(scores[-1]), np.std(scores[-1])))
+					x_range = np.arange(len(scores))[::n]
+					if 'EA' in folder:
+						x_range *= 5
+						
+					ax1.errorbar(x_range, np.mean(scores, axis = 1)[::n], yerr = np.std(scores, axis = 1)[::n], label = folder.split('_')[0], fmt = fmt)
+					i = 1
+			ax1.legend()
+			ax1.set_title('%s Cities Solution Search Progress' %fn_prefix)
+			ax1.set_xlabel('Iterations')
+			ax1.set_ylabel('Solution Distance')
+			ax1.set_xlim([0, ITERATIONS])
+			ax1.get_figure().savefig('%sCity_Solutions.png' %fn_prefix)
+			plt.close(ax1.get_figure())
+			# plt.show()
+
+			for folder in folders:
+				sol_file = [folder+'%scities_sols_%s.csv' %(fn_prefix,i) for i in range(REPEAT)]
+				F = fileReader(data_file)
+				GS = GenerateSolution(F.distanceMatrix)
+				sols = []
+				score = 1e10
+				if 'EA' in folder:
+					with open(folder + '%scities_sols.csv' %fn_prefix, 'rb') as csvfile:
+						reader = csv.reader(csvfile)
+						for row in reader:
+							if float(row[-1]) < score:
+								sols = copy.deepcopy(np.array(row[:-1]).astype(float).astype(int))
+								score = float(row[-1])
+				else:
+					for f in sol_file:
+						with open(f, 'rb') as csvfile:
+							reader = csv.reader(csvfile)
+							row = np.array(list(reader)[-1]).astype(int)
+						if GS.evaluate(row) < score:
+							sols = copy.deepcopy(row)
+							score = GS.evaluate(row)
+				f2,ax2 = plt.subplots(1,1)
+				F.plotSolution(sols, ax = ax2, show = False)
+				if 'SA' in folder:
+					name = 'Simulated Annealing'
+				elif 'EA' in folder:
+					name = 'Evolutionary Algorithm'
+				else:
+					name = 'MCTS'
+				ax2.set_title('%s Cities Best Solution for %s - %0.2f' %(fn_prefix, name, score))
+				ax2.set_xlabel('X Position')
+				ax2.set_ylabel('Y Position')
+				ax2.get_figure().savefig('%sCity_%s.png' %(fn_prefix,folder.split('_')[0]))
+
+
+
+
+
+		pdb.set_trace()
+
 
 if __name__ == '__main__':
 	F = fileReader('hw2.data/15cities.csv')
@@ -557,8 +646,14 @@ if __name__ == '__main__':
 
 	# pdb.set_trace()
 	PFH = PlotsForHomework()
-	# PFH.plotOriginalData()
-	# PFH.SASolutions_multiple()
-	# PFH.EASolutions_multiple()
-	PFH.MCTSSoltuions_multiple()
+
+	p = []
+	p.append(Process(target=PFH.SASolutions_multiple))
+	p.append(Process(target=PFH.EASolutions_multiple))
+	p.append(Process(target=PFH.MCTSSoltuions_multiple))
+	[P.start() for P in p]
+	[P.join() for P in p]
+
+
+	PFH.CitiesResults()
 
