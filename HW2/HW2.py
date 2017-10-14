@@ -8,7 +8,7 @@ from itertools import cycle
 import matplotlib.pyplot as plt
 import copy
 import time
-
+from collections import defaultdict
 ITER_LIMIT = 100000
 REPEAT = 10
 
@@ -159,7 +159,7 @@ class SimulatedAnnealing(GenerateSolution):
 			s = s_choosen[0]
 			scores.append(s_choosen[1])
 		print('Solution: %s' %s)
-		return scores
+		return scores, s_choosen
 
 	def plotSearch(self, scores):
 		f,ax = plt.subplots(1,1)
@@ -207,6 +207,7 @@ class EvolutionaryAlgorithm(SimulatedAnnealing):
 		rand_sol_gen = self.generator(Pop_total)
 		sol_list = [(s,self.evaluate(s)) for s in next(rand_sol_gen)]
 		scores = []
+		sol_list_all = []
 		for i in range(N):
 			noise = 1.0 - i/N
 			parent_list = self.choose_parents(sol_list, Mutations, noise)
@@ -214,10 +215,155 @@ class EvolutionaryAlgorithm(SimulatedAnnealing):
 			child_list.extend(sol_list)
 			sol_list = self.accept(child_list, Pop_total)
 			scores.append(np.sort([s[1] for s in sol_list]))
+			# sol_list_all.append(s[0] for s in np.sort(sol_list, key=lambda x:x[1]))
+		# return scores, sol_list_all
 		return scores, min(sol_list, key=lambda x: x[1])
 
 	def printSortedValues(self, sols):
 		pprint(np.sort([p[1] for p in sols]))
+
+class MonteCarloTreeSearch(SimulatedAnnealing):
+	def __init__(self, distanceMatrix, epsilon = 1.0):
+		super(MonteCarloTreeSearch, self).__init__(distanceMatrix)
+		self.tree = dict.fromkeys(range(self.sol_length))
+		for k in self.tree.keys(): #setting initial value
+			self.tree[k] = self.createBlankNode([k])
+		self.epsilon = epsilon
+		self.best_distance = 1e9
+		self.best_solution = []
+
+	def createBlankNode(self, path):
+		node = dict.fromkeys(['path', 'value', 'visits', 'children', 'parent'])
+		node['path'] = path
+		node['value'] = 0
+		node['visits'] = 0
+		if len(node['path']) == self.sol_length: #applies stopping condition
+			node['children'] = None
+		else:
+			node['children'] = []
+		return node
+
+	def Guess(self, exclude = None):
+		#returns a random choice to start tree
+		if exclude is None:
+			first = np.random.choice(range(self.sol_length))
+		else:
+			remaining = set(range(self.sol_length)) - set(exclude)
+			first = np.random.choice(list(remaining))
+		return first
+
+	def addNode(self, parent, next_exploration=None):
+		# randomly select future states
+		# make sure node doesn't exist
+		if next_exploration is None:
+			next_exploration = self.Guess(exclude = parent['path'])
+		path = parent['path'] + [next_exploration]
+		if len(path) != len(set(path)):
+				pdb.set_trace()
+		child = self.createBlankNode(path)
+		child['visits'] += 1
+		# playout scenario
+		play_out = self.Playout(path)
+		child['value'] = self.evaluate(play_out)
+		parent['children'].append({next_exploration:child})
+
+		# backprop value up chain
+		self.updateCosts(child['path'])
+		
+		# update tracker if best score
+		if self.best_distance > child['value']:
+			self.best_distance = child['value']
+			self.best_solution = play_out
+
+	def findLeaf(self, parent):
+		if parent['children'] is None:
+			# a solution can't be any longer
+			return
+		if parent['children'] == []:
+			#found a leaf
+			self.addNode(parent)
+		else:
+			# epsilon greedily choose next step
+			if np.random.rand(1) < self.epsilon: # do random choice
+				child_indx =  self.Guess(exclude = parent['path'])
+				all_children = [p.keys()[0] for p in parent['children']]
+				# if state exists, go there
+				if child_indx in all_children:
+					child_node = self.get_Child_Node_From_Node(parent, child_indx)
+					self.findLeaf(child_node)
+				else:
+				# if state doesn't exist, then create it
+					self.addNode(parent, child_indx)
+			else:
+				child_node = self.get_Min_Child_From_Node(parent)
+				self.findLeaf(child_node)
+
+	def get_Min_Child_From_Node(self, parent):
+		child_scores = list()
+		for c in parent['children']:
+			child_scores.append([c.keys()[0],c[c.keys()[0]]['value']])
+		# add something if values are equal
+		___, min_score = min(child_scores, key=lambda x:x[1])
+		min_indxs = [k[0] for k in child_scores if k[1] == min_score]
+		child_indx = np.random.choice(min_indxs)
+		child_node = self.get_Child_Node_From_Node(parent,child_indx)
+		return child_node
+
+	def get_Child_Node_From_Node(self, node, indx):
+		# given a node, it will search the children and return the node that corresponds
+		# to the child
+		all_children = [C.keys()[0] for C in node['children']]
+		ix = all_children.index(indx)
+		desired_node = node['children'][ix][indx]
+		return desired_node
+
+	def traverseTree(self, path):
+		node = self.tree[path[0]] #deals with head of tree
+		try:
+			if len(path) > 1:
+				for p in path[1:]:
+					node = self.get_Child_Node_From_Node(node, p)
+		except:
+			pprint("Path: %s" %path)
+			raise AttributeError("'Node does not exist'")
+		return node
+
+	def updateCosts(self, path):
+		while len(path) >= 2:
+			current_node = self.traverseTree(path)
+			parent_node = self.traverseTree(path[:-1])
+			parent_node['value'] = (current_node['value'] + parent_node['value'] * parent_node['visits'])/(parent_node['visits'] + 1)
+			parent_node['visits'] += 1
+			path = path[:-1]
+
+	def Playout(self, path):
+		play_out = copy.deepcopy(path)
+		while len(play_out) < self.sol_length:
+			play_out.append(self.Guess(exclude = play_out))
+		return play_out
+
+	def rootTreeChoice(self):
+		#root is structured slightly differently so need a different method
+		# same idea though
+		if np.random.rand(1) < self.epsilon:
+			child_indx = np.random.choice(range(self.sol_length))
+		else:
+			child_scores = [[k,self.tree[k]['value']] for k in self.tree.keys()]
+			min_score = min([[k,self.tree[k]['value']] for k in self.tree.keys()], key=lambda x: x[1])[1]
+			min_indx = [k for k in self.tree.keys() if self.tree[k]['value'] == min_score]
+			child_indx = np.random.choice(min_indx)
+		return child_indx
+
+	def findSolution(self, N):
+		scores = []
+		sol_list = []
+		for i in range(N):
+			first = self.rootTreeChoice()
+			self.findLeaf(self.tree[first])
+			self.epsilon = float(N-i)/N
+			scores.append(self.best_distance)
+			sol_list.append(self.best_solution)
+		return scores, sol_list
 
 
 
@@ -259,18 +405,25 @@ class PlotsForHomework(object):
 		N = 10000
 		for fn in self.fn_list:
 			scores = []
+			sols = []
 			times = []
 			for i in range(REPEAT):
 				F = fileReader(fn)
 				start_time = time.time()
 				SA = SimulatedAnnealing(F.distanceMatrix)
 				times.append(time.time() - start_time)
-				scores.append(SA.findSolution(N))
+				score,sol = SA.findSolution(N)
+				scores.append(score)
+				sols.append(sol)
 			scores_all.append(scores)
 			times_all.append(times)
-			with open(fn.replace('hw2.data/','SA_Results/'),'wb') as csvfile:
+			with open(fn.replace('hw2.data/','SA_Results/').replace('.','_score.'),'wb') as csvfile:
 				writer = csv.writer(csvfile)
 				[writer.writerow(s) for s in np.array(scores).T]
+			with open(fn.replace('hw2.data/', 'SA_Results/').replace('.','_sol.'), 'wb') as csvfile:
+				writer = csv.writer(csvfile)
+				for s in np.array(sols):
+					writer.writerow(np.append(s[0], s[1]))
 			with open(fn.replace('hw2.data/','SA_Results/').replace('.','_time.'),'wb') as csvfile:
 				writer = csv.writer(csvfile)
 				[writer.writerow([s]) for s in np.array(times).T]
@@ -301,7 +454,7 @@ class PlotsForHomework(object):
 					scores.append(row)
 
 	def EASolution(self):
-		N = 100
+		N = 1000
 		P = 10
 		M = 5
 		scores = []
@@ -316,7 +469,7 @@ class PlotsForHomework(object):
 			plt.show()
 
 	def EASolutions_multiple(self):
-		N = 100
+		N = 1000
 		P = 10
 		M = 5
 		for fn in self.fn_list:
@@ -333,12 +486,42 @@ class PlotsForHomework(object):
 				sols.append(sol)
 
 				for s_i in scores:
-					with open(fn.replace('hw2.data/','EA_Results/').replace('.','_%s.' %i),'wb') as csvfile:
+					with open(fn.replace('hw2.data/','EA_Results/').replace('.','_scores_%s.' %i),'wb') as csvfile:
 						writer = csv.writer(csvfile)
 						[writer.writerow(s) for s in np.array(s_i)]
+
+			with open(fn.replace('hw2.data/','EA_Results/').replace('.','_sols.'),'wb') as csvfile:
+				writer = csv.writer(csvfile)
+				for s in np.array(sols):
+					writer.writerow(np.append(s[0], s[1]))
 			with open(fn.replace('hw2.data/','EA_Results/').replace('.','_time.'),'wb') as csvfile:
 				writer = csv.writer(csvfile)
 				[writer.writerow([s]) for s in np.array(times).T]
+
+	def MCTSSoltuions_multiple(self):
+		N = int(1e5)
+		for fn,sc in zip(self.fn_list, self.scenarios):
+			scores = []
+			times = []
+			sols = []
+			for i in range(REPEAT):
+				F = fileReader(fn)
+				MCTS = MonteCarloTreeSearch(F.distanceMatrix)
+				start_time = time.time()
+				s, sol = MCTS.findSolution(N = N)
+				times.append(time.time() - start_time)
+				scores.append(s)
+				sols.append(sol)
+			with open('MCTS_Results/%scities_%s.csv' %(sc,'score'),'wb') as csvfile:
+				writer = csv.writer(csvfile)
+				[writer.writerow(s) for s in np.array(scores).T]
+			for i,s_i in enumerate(sols):
+				with open('MCTS_Results/%scities_%s_%s.csv' %(sc,'sols',i),'wb') as csvfile:
+					writer = csv.writer(csvfile)
+					[writer.writerow(s) for s in s_i]
+			with open('MCTS_Results/%scities_%s.csv' %(sc,'time'),'wb') as csvfile:
+				writer = csv.writer(csvfile)
+				[writer.writerow(s) for t in times]
 
 if __name__ == '__main__':
 	F = fileReader('hw2.data/15cities.csv')
@@ -365,8 +548,17 @@ if __name__ == '__main__':
 	# s_new = O.accept(s_list, 100)
 	# print('Chosen Solution: %0.2f' %s_new[1])
 
+	# MCTS = MonteCarloTreeSearch(F.distanceMatrix)
+	# for __ in np.arange(1e5):
+	# 	first = MCTS.rootTreeChoice()
+	# 	MCTS.findLeaf(MCTS.tree[first])
+	# pprint('Best Solution:%s' %(MCTS.best_solution))
+	# pprint('Min Distance:%s' %(MCTS.best_distance))
+
+	# pdb.set_trace()
 	PFH = PlotsForHomework()
 	# PFH.plotOriginalData()
 	# PFH.SASolutions_multiple()
-	PFH.EASolutions_multiple()
+	# PFH.EASolutions_multiple()
+	PFH.MCTSSoltuions_multiple()
 
