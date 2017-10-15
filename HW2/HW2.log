@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2017.9.18)  14 OCT 2017 20:05
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2017.9.18)  14 OCT 2017 21:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -604,9 +604,6 @@ Package: enumitem 2011/09/28 v3.5.2 Customized lists
 
 LaTeX Warning: Label `tab:25Comparison' multiply defined.
 
-
-LaTeX Warning: Label `tab:25Comparison' multiply defined.
-
 )
 \openout1 = `HW2.aux'.
 
@@ -710,25 +707,25 @@ LaTeX Info: Redefining \nameref on input line 25.
 \openout4 = `HW2.out'.
 
  (./MapPlots.tex
-<15cities.png, id=68, 578.16pt x 433.62pt>
+<15cities.png, id=72, 578.16pt x 433.62pt>
 File: 15cities.png Graphic file (type png)
  <use 15cities.png>
 Package pdftex.def Info: 15cities.png used on input line 6.
 (pdftex.def)             Requested size: 192.0548pt x 144.0412pt.
 
-<25cities.png, id=70, 578.16pt x 433.62pt>
+<25cities.png, id=74, 578.16pt x 433.62pt>
 File: 25cities.png Graphic file (type png)
  <use 25cities.png>
 Package pdftex.def Info: 25cities.png used on input line 12.
 (pdftex.def)             Requested size: 192.0548pt x 144.0412pt.
 
-<100cities.png, id=71, 578.16pt x 433.62pt>
+<100cities.png, id=75, 578.16pt x 433.62pt>
 File: 100cities.png Graphic file (type png)
  <use 100cities.png>
 Package pdftex.def Info: 100cities.png used on input line 18.
 (pdftex.def)             Requested size: 192.0548pt x 144.0412pt.
 
-<25cities_A.png, id=72, 578.16pt x 433.62pt>
+<25cities_A.png, id=76, 578.16pt x 433.62pt>
 File: 25cities_A.png Graphic file (type png)
  <use 25cities_A.png>
 Package pdftex.def Info: 25cities_A.png used on input line 24.
@@ -744,12 +741,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 42--48
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 68.
-(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 68.
 )
 Overfull \hbox (46.08937pt too wide) in paragraph at lines 52--39
 \T1/cmr/m/n/10 vis-ited once be-fore, then $\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 O
@@ -783,50 +774,50 @@ l.39
                                                   
 l.39 
       <./15cities.png> <./25cities.png> <./100cities.png> <./25cities_A.png>]
-(./15Cities.tex [3] <15City_SA.png, id=104, 578.16pt x 433.62pt>
+(./15Cities.tex [3] <15City_SA.png, id=108, 578.16pt x 433.62pt>
 File: 15City_SA.png Graphic file (type png)
 
 <use 15City_SA.png>
 Package pdftex.def Info: 15City_SA.png used on input line 34.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <15City_EA.png, id=105, 578.16pt x 433.62pt>
+ <15City_EA.png, id=109, 578.16pt x 433.62pt>
 File: 15City_EA.png Graphic file (type png)
 
 <use 15City_EA.png>
 Package pdftex.def Info: 15City_EA.png used on input line 40.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <15City_MCTS.png, id=106, 578.16pt x 433.62pt>
+ <15City_MCTS.png, id=110, 578.16pt x 433.62pt>
 File: 15City_MCTS.png Graphic file (type png)
 
 <use 15City_MCTS.png>
 Package pdftex.def Info: 15City_MCTS.png used on input line 46.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <15City_Solutions.png, id=107, 578.16pt x 433.62pt>
+ <15City_Solutions.png, id=111, 578.16pt x 433.62pt>
 File: 15City_Solutions.png Graphic file (type png)
 
 <use 15City_Solutions.png>
 Package pdftex.def Info: 15City_Solutions.png used on input line 52.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
 ) (./25Cities.tex
-<25City_EA.png, id=108, 578.16pt x 433.62pt>
+<25City_EA.png, id=112, 578.16pt x 433.62pt>
 File: 25City_EA.png Graphic file (type png)
  <use 25City_EA.png>
 Package pdftex.def Info: 25City_EA.png used on input line 25.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
 
-<25City_SA.png, id=109, 578.16pt x 433.62pt>
+<25City_SA.png, id=113, 578.16pt x 433.62pt>
 File: 25City_SA.png Graphic file (type png)
  <use 25City_SA.png>
 Package pdftex.def Info: 25City_SA.png used on input line 31.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
 
-<25City_MCTS.png, id=110, 578.16pt x 433.62pt>
+<25City_MCTS.png, id=114, 578.16pt x 433.62pt>
 File: 25City_MCTS.png Graphic file (type png)
  <use 25City_MCTS.png>
 Package pdftex.def Info: 25City_MCTS.png used on input line 37.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
 
-<25City_Solutions.png, id=111, 578.16pt x 433.62pt>
+<25City_Solutions.png, id=115, 578.16pt x 433.62pt>
 File: 25City_Solutions.png Graphic file (type png)
  <use 25City_Solutions.png>
 Package pdftex.def Info: 25City_Solutions.png used on input line 43.
@@ -868,25 +859,25 @@ l.44
                                                   
 l.44 
       <./15City_SA.png> <./15City_EA.png> <./15City_MCTS.png> <./15City_Solutio
-ns.png>] (./25ACities.tex <25ACity_EA.png, id=126, 578.16pt x 433.62pt>
+ns.png>] (./25ACities.tex <25ACity_EA.png, id=130, 578.16pt x 433.62pt>
 File: 25ACity_EA.png Graphic file (type png)
 
 <use 25ACity_EA.png>
 Package pdftex.def Info: 25ACity_EA.png used on input line 27.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <25ACity_SA.png, id=127, 578.16pt x 433.62pt>
+ <25ACity_SA.png, id=131, 578.16pt x 433.62pt>
 File: 25ACity_SA.png Graphic file (type png)
 
 <use 25ACity_SA.png>
 Package pdftex.def Info: 25ACity_SA.png used on input line 33.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <25ACity_MCTS.png, id=128, 578.16pt x 433.62pt>
+ <25ACity_MCTS.png, id=132, 578.16pt x 433.62pt>
 File: 25ACity_MCTS.png Graphic file (type png)
 
 <use 25ACity_MCTS.png>
 Package pdftex.def Info: 25ACity_MCTS.png used on input line 39.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <25ACity_Solutions.png, id=129, 578.16pt x 433.62pt>
+ <25ACity_Solutions.png, id=133, 578.16pt x 433.62pt>
 File: 25ACity_Solutions.png Graphic file (type png)
 
 <use 25ACity_Solutions.png>
@@ -923,25 +914,25 @@ l.46
                                                   
 l.46 
       <./25City_EA.png> <./25City_SA.png> <./25City_MCTS.png> <./25City_Solutio
-ns.png>] (./100Cities.tex <100City_EA.png, id=143, 578.16pt x 433.62pt>
+ns.png>] (./100Cities.tex <100City_EA.png, id=147, 578.16pt x 433.62pt>
 File: 100City_EA.png Graphic file (type png)
 
 <use 100City_EA.png>
 Package pdftex.def Info: 100City_EA.png used on input line 27.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <100City_SA.png, id=144, 578.16pt x 433.62pt>
+ <100City_SA.png, id=148, 578.16pt x 433.62pt>
 File: 100City_SA.png Graphic file (type png)
 
 <use 100City_SA.png>
 Package pdftex.def Info: 100City_SA.png used on input line 33.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <100City_MCTS.png, id=145, 578.16pt x 433.62pt>
+ <100City_MCTS.png, id=149, 578.16pt x 433.62pt>
 File: 100City_MCTS.png Graphic file (type png)
 
 <use 100City_MCTS.png>
 Package pdftex.def Info: 100City_MCTS.png used on input line 39.
 (pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <100City_Solutions.png, id=146, 578.16pt x 433.62pt>
+ <100City_Solutions.png, id=150, 578.16pt x 433.62pt>
 File: 100City_Solutions.png Graphic file (type png)
 
 <use 100City_Solutions.png>
@@ -978,54 +969,60 @@ l.50
                                                   
 l.50 
       <./25ACity_EA.png> <./25ACity_SA.png> <./25ACity_MCTS.png> <./25ACity_Sol
-utions.png>]) (./HW2.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 53.
+utions.png>]) (./SolutionSize.tex) (./HW2.bbl)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 54.
  [7pdfTeX warning (ext4): destination with the same identifier (name{figure.17}
 ) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.53 \end{document}
+l.54 \end{document}
                    pdfTeX warning (ext4): destination with the same identifier 
 (name{figure.18}) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.53 \end{document}
+l.54 \end{document}
                    pdfTeX warning (ext4): destination with the same identifier 
 (name{figure.19}) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.53 \end{document}
+l.54 \end{document}
                    pdfTeX warning (ext4): destination with the same identifier 
 (name{figure.20}) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.53 \end{document}
+l.54 \end{document}
+                   pdfTeX warning (ext4): destination with the same identifier 
+(name{table.5}) has been already used, duplicate ignored
+
+\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
+                                                  
+l.54 \end{document}
                     <./100City_EA.png> <./100City_SA.png> <./100City_MCTS.png> 
 <./100City_Solutions.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 53.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 54.
  (./HW2.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 53.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 53.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 54.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 54.
 Package rerunfilecheck Info: File `HW2.out' has not changed.
-(rerunfilecheck)             Checksum: B9B222F522492A04978A4B06A8F60166;775.
+(rerunfilecheck)             Checksum: 946F415465DBE53A8EF31F7E48E4F057;824.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 53.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 54.
  ) 
 Here is how much of TeX's memory you used:
- 16664 strings out of 493304
- 288906 string characters out of 6139871
- 388157 words of memory out of 5000000
- 19718 multiletter control sequences out of 15000+600000
+ 16655 strings out of 493304
+ 288725 string characters out of 6139871
+ 388311 words of memory out of 5000000
+ 19707 multiletter control sequences out of 15000+600000
  14428 words of font info for 37 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 63i,15n,57p,674b,361s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 63i,15n,57p,715b,361s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/
@@ -1035,10 +1032,10 @@ b></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/
 fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/public/c
 m-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1728.pfb
 >
-Output written on HW2.pdf (7 pages, 1070009 bytes).
+Output written on HW2.pdf (7 pages, 1072995 bytes).
 PDF statistics:
- 219 PDF objects out of 1000 (max. 8388607)
- 159 compressed objects within 2 object streams
- 48 named destinations out of 1000 (max. 500000)
- 225 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 225 PDF objects out of 1000 (max. 8388607)
+ 165 compressed objects within 2 object streams
+ 50 named destinations out of 1000 (max. 500000)
+ 233 words of extra memory for PDF output out of 10000 (max. 10000000)
 

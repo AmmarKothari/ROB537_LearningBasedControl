@@ -10,6 +10,7 @@ import copy
 import time
 from collections import defaultdict
 from multiprocessing import Process
+import math
 ITER_LIMIT = 100000
 REPEAT = 10
 ITERATIONS = int(1e4)
@@ -611,6 +612,12 @@ class PlotsForHomework(object):
 
 		pdb.set_trace()
 
+	def SolutionSize(self):
+		perm = lambda x: math.factorial(x)/math.factorial(x-x) #second x is number choosen
+		print('Total Solutions')
+		for x in (15, 25, 100):
+			print('%s City: %.3e, %% Searched: %0.3e' %(x,perm(x), float(ITERATIONS)/perm(x)))
+
 
 if __name__ == '__main__':
 	F = fileReader('hw2.data/15cities.csv')
@@ -656,4 +663,5 @@ if __name__ == '__main__':
 
 
 	PFH.CitiesResults()
+	# PFH.SolutionSize()
 

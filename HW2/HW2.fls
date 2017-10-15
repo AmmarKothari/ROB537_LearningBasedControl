@@ -245,8 +245,6 @@ INPUT Algorithms.tex
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx1000.tfm
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
-INPUT /usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecrm0700.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecrm0500.tfm
 INPUT 15Cities.tex
@@ -305,6 +303,8 @@ INPUT ./100City_MCTS.png
 INPUT 100City_Solutions.png
 INPUT ./100City_Solutions.png
 INPUT ./100City_Solutions.png
+INPUT SolutionSize.tex
+INPUT SolutionSize.tex
 INPUT HW2.bbl
 INPUT HW2.bbl
 INPUT HW2.aux

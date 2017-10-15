@@ -55,7 +55,7 @@ The implementation used in this assignment is not optimized.  As a result, it ha
 \begin{itemize}[label={}]
 	\item InitializeTree()
 	\item For i < TOTALITERATIONS:
-		\begin{itemize}
+		\begin{itemize}[label={}]
 			\item Parent = PickParent(Tree)
 			\item Node = PickChild(Parent)
 			\item Leaf\_Value = DescendTree(Node)
@@ -64,9 +64,9 @@ The implementation used in this assignment is not optimized.  As a result, it ha
 \end{itemize}
 
 \textbf{DescendTree}
-\begin{itemize}
+\begin{itemize}[label={}]
 	\item If Node has Children
-	\begin{itemize}
+	\begin{itemize}[label={}]
 		\item Node = PickChild(Node)
 		\item DescendTree(Node)
 	\end{itemize}
