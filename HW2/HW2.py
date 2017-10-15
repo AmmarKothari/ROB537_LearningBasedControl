@@ -540,7 +540,7 @@ class PlotsForHomework(object):
 					reader = csv.reader(csvfile)
 					time_scenario = [float(row[0]) for row in reader]
 					print(folder)
-					print('Mean:%0.4f, StDev:%0.4f' %(np.mean(time_scenario), np.std(time_scenario)))
+					print('Mean:%sf, StDev:%sf' %(np.mean(time_scenario), np.std(time_scenario)))
 				times_all.append(time_scenario)
 
 			##### City Graphs #####
@@ -647,12 +647,12 @@ if __name__ == '__main__':
 	# pdb.set_trace()
 	PFH = PlotsForHomework()
 
-	p = []
-	p.append(Process(target=PFH.SASolutions_multiple))
-	p.append(Process(target=PFH.EASolutions_multiple))
-	p.append(Process(target=PFH.MCTSSoltuions_multiple))
-	[P.start() for P in p]
-	[P.join() for P in p]
+	# p = []
+	# p.append(Process(target=PFH.SASolutions_multiple))
+	# p.append(Process(target=PFH.EASolutions_multiple))
+	# p.append(Process(target=PFH.MCTSSoltuions_multiple))
+	# [P.start() for P in p]
+	# [P.join() for P in p]
 
 
 	PFH.CitiesResults()

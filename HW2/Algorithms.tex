@@ -6,18 +6,19 @@
 
 \section{Algorithm Explanation}
 \subsection{Simulated Annealing}
-% In this work, a basic version of Simulated Annealing is implementated.  
-\begin{itemize}
+% In this work, a basic version of Simulated Annealing is implementated. 
+\vbox{ 
+\begin{itemize}[label={}]
 \item s = InitialGuess()
 \item For i < TOTALITERATIONS:
-	\begin{itemize}
+	\begin{itemize}[label={}]
 	\item sNew = NeighborSol(s)
 	\item s = TempSelect(s, sNew, Temp)
 	\item DecreaseTemp(Temp)
 	\end{itemize}
 \item FinalSolution = s
 \end{itemize}
-
+}
 \textbf{InitialGuess} -- Intial solution generated randomly \\
 \textbf{TOTALITERATIONS} -- Number of solutions to try \\
 \textbf{NeighborSol} -- Generate a succesor state to $s$ by switching the order of two adjacent cities in $s$ \\
@@ -25,18 +26,19 @@
 \textbf{DecreaseTemp} -- Decrases the temperature such that it ends at 0 (always choosing the better solution) when the maximum number of iterations is reached. 
 
 \subsection{Evolutionary Algorithm}
-% In this work, a 
-\begin{itemize}
+% In this work, a
+\vbox{
+\begin{itemize}[label={}]
 	\item POP = InitialGuess(POP\_TOT)
 	\item For i < TOTALITERATIONS:
-		\begin{itemize}
+		\begin{itemize}[label={}]
 			\item POP\_SEL = ChooseParents(POP)
 			\item CHILD = PerturbPopulation(POP\_SEL)
 			\item POP = SelectPop(CHILD, POP)
 		\end{itemize}
 	Soltuion = Min\_Value(Pop)
 \end{itemize}
-
+}
 \textbf{InitialGuess} -- Initial population of solutions generated randomly \\
 \textbf{TOTALITERATIONS} -- Number of generations \\
 \textbf{ChooseParents} -- Epsilon-greedy choose best solutions in population based on some amount of noise \\
@@ -44,12 +46,13 @@
 \textbf{SelectPop} -- Choose the best solutions from the original population and mutated children.  The resulting number of solutions is equal to the starting population size. \\
 \textbf{Min\_Value} -- From a given population, returns the member that has the best solution value. \\
 
-In this assignment, Population size was 10.  Number of children produced each round was 5.  Noise was decreased from 1 to 0 based on current iteration number.  For this algorithm, the total number of iterations was choosen as 1,000.  This is ten times less than the other two approaches in order to have a similar number of total generated solutions.  
+In this assignment, Population size was 10.  Number of children produced each round was 5.  Noise was decreased from 1 to 0 based on current iteration number.  For this algorithm, the total number of iterations was choosen as 2,000.  This is five times less than the other two approaches in order to have a similar number of total generated solutions.  
 
 \subsection{Monte Carlo Tree Search}
-The implementation used in this assignment is not optimized.  As a result, it has slow run times but is able to find solutions. \\
+The implementation used in this assignment is not optimized.  As a result, it has slow run times but is able to find solutions.  For each iteration, the best solution so far has been stored in memory.  Alternatively, at the end of runtime, a greedy path can be followed through the tree to a leaf. \\
+\vbox{
 \textbf{Main Algorithm}
-\begin{itemize}
+\begin{itemize}[label={}]
 	\item InitializeTree()
 	\item For i < TOTALITERATIONS:
 		\begin{itemize}
@@ -69,7 +72,7 @@ The implementation used in this assignment is not optimized.  As a result, it ha
 	\end{itemize}
 	\item Else: PlayOut()
 \end{itemize}
-
+}
 \textbf{InitializeTree} -- Initializes tree structure.  Nodes are initialized with best value to promote exploration. \\
 \textbf{TOTALITERATIONS} -- Number of solutions to try \\
 \textbf{PickParent} -- Probabilistically chooses the first node of the tree based on value. \\
