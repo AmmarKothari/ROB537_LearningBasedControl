@@ -13,7 +13,7 @@ from multiprocessing import Process
 import math
 ITER_LIMIT = 100000
 REPEAT = 10
-ITERATIONS = int(1e4)
+ITERATIONS = [int(1e4), int(1e4), int(1e5)]
 
 class fileReader(object):
 	def __init__(self, fn):
@@ -367,10 +367,20 @@ class MonteCarloTreeSearch(SimulatedAnnealing):
 		return scores, sol_list
 
 class PlotsForHomework(object):
-	def __init__(self):
-		self.fn_list = ['hw2.data/%scities.csv' %(i) for i in (15,25,100)]
-		self.fn_list.append('hw2.data/25cities_A.csv')
-		self.scenarios = ['15', '25', '100', '25A']
+	def __init__(self, tests = None):
+		if tests is None:
+			self.fn_list = ['hw2.data/%scities.csv' %(i) for i in (15,25,100)]
+			self.fn_list.append('hw2.data/25cities_A.csv')
+			self.scenarios = ['15', '25', '100', '25A']
+		elif tests == 100:
+			self.fn_list = ['hw2.data/%scities.csv' %(i) for i in ([100])]
+			self.scenarios = ['100']
+			global ITERATIONS
+			ITERATIONS = [ITERATIONS[-1]]
+		else:
+			print('Not a valid Test')
+			return
+
 
 	def plotOriginalData(self):
 		for fn in self.fn_list:
@@ -399,8 +409,7 @@ class PlotsForHomework(object):
 		print('Simulated Annealing Solution')
 		scores_all = []
 		times_all = []
-		N = ITERATIONS
-		for fn,sc in zip(self.fn_list, self.scenarios):
+		for fn,sc,N in zip(self.fn_list, self.scenarios, ITERATIONS):
 			scores = []
 			sols = []
 			times = []
@@ -469,8 +478,7 @@ class PlotsForHomework(object):
 		print('Solving With Evolutionary Algorithm')
 		P = 10
 		M = 5
-		N = int(ITERATIONS/M)
-		for fn,sc in zip(self.fn_list, self.scenarios):
+		for fn,sc,N in zip(self.fn_list, self.scenarios, ITERATIONS):
 			scores = []
 			max_scores = []
 			times = []
@@ -506,7 +514,7 @@ class PlotsForHomework(object):
 	def MCTSSoltuions_multiple(self):
 		print('Solving with MCTS')
 		N = ITERATIONS
-		for fn,sc in zip(self.fn_list, self.scenarios):
+		for fn,sc,N in zip(self.fn_list, self.scenarios, ITERATIONS):
 			scores = []
 			times = []
 			sols = []
@@ -652,14 +660,14 @@ if __name__ == '__main__':
 	# pprint('Min Distance:%s' %(MCTS.best_distance))
 
 	# pdb.set_trace()
-	PFH = PlotsForHomework()
+	PFH = PlotsForHomework(tests = 100)
 
-	# p = []
-	# p.append(Process(target=PFH.SASolutions_multiple))
-	# p.append(Process(target=PFH.EASolutions_multiple))
-	# p.append(Process(target=PFH.MCTSSoltuions_multiple))
-	# [P.start() for P in p]
-	# [P.join() for P in p]
+	p = []
+	p.append(Process(target=PFH.SASolutions_multiple))
+	p.append(Process(target=PFH.EASolutions_multiple))
+	p.append(Process(target=PFH.MCTSSoltuions_multiple))
+	[P.start() for P in p]
+	[P.join() for P in p]
 
 
 	PFH.CitiesResults()

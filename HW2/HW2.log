@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2017.9.18)  14 OCT 2017 21:07
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2017.9.18)  16 OCT 2017 20:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -632,20 +632,20 @@ File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
-* h-part:(L,W,R)=(85.35826pt, 426.79135pt, 85.35826pt)
-* v-part:(T,H,B)=(85.35826pt, 702.78308pt, 56.9055pt)
+* h-part:(L,W,R)=(56.9055pt, 483.69687pt, 56.9055pt)
+* v-part:(T,H,B)=(56.9055pt, 731.23584pt, 56.9055pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
-* \textwidth=426.79135pt
-* \textheight=702.78308pt
-* \oddsidemargin=13.08827pt
-* \evensidemargin=13.08827pt
-* \topmargin=-23.91173pt
+* \textwidth=483.69687pt
+* \textheight=731.23584pt
+* \oddsidemargin=-15.36449pt
+* \evensidemargin=-15.36449pt
+* \topmargin=-52.36449pt
 * \headheight=12.0pt
 * \headsep=25.0pt
 * \topskip=10.0pt
 * \footskip=30.0pt
-* \marginparwidth=49.79231pt
+* \marginparwidth=78.24507pt
 * \marginparsep=11.0pt
 * \columnsep=10.0pt
 * \skip\footins=9.0pt plus 4.0pt minus 2.0pt
@@ -711,125 +711,118 @@ LaTeX Info: Redefining \nameref on input line 25.
 File: 15cities.png Graphic file (type png)
  <use 15cities.png>
 Package pdftex.def Info: 15cities.png used on input line 6.
-(pdftex.def)             Requested size: 192.0548pt x 144.0412pt.
+(pdftex.def)             Requested size: 217.66211pt x 163.24228pt.
 
 <25cities.png, id=74, 578.16pt x 433.62pt>
 File: 25cities.png Graphic file (type png)
  <use 25cities.png>
 Package pdftex.def Info: 25cities.png used on input line 12.
-(pdftex.def)             Requested size: 192.0548pt x 144.0412pt.
+(pdftex.def)             Requested size: 217.66211pt x 163.24228pt.
 
 <100cities.png, id=75, 578.16pt x 433.62pt>
 File: 100cities.png Graphic file (type png)
  <use 100cities.png>
 Package pdftex.def Info: 100cities.png used on input line 18.
-(pdftex.def)             Requested size: 192.0548pt x 144.0412pt.
+(pdftex.def)             Requested size: 217.66211pt x 163.24228pt.
 
 <25cities_A.png, id=76, 578.16pt x 433.62pt>
 File: 25cities_A.png Graphic file (type png)
  <use 25cities_A.png>
 Package pdftex.def Info: 25cities_A.png used on input line 24.
-(pdftex.def)             Requested size: 192.0548pt x 144.0412pt.
+(pdftex.def)             Requested size: 217.66211pt x 163.24228pt.
+)
+(./Algorithms.tex [1
 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}pdfTeX warning (ext4): desti
+nation with the same identifier (name{figure.1}) has been already used, duplica
+te ignored
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
+                                                  
+l.22 \textbf{InitialGuess}
+                           -- Intial solution generated randomly \\pdfTeX warni
+ng (ext4): destination with the same identifier (name{figure.2}) has been alrea
+dy used, duplicate ignored
 
-) (./Algorithms.tex [1
+\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
+                                                  
+l.22 \textbf{InitialGuess}
+                           -- Intial solution generated randomly \\pdfTeX warni
+ng (ext4): destination with the same identifier (name{figure.3}) has been alrea
+dy used, duplicate ignored
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
+                                                  
+l.22 \textbf{InitialGuess}
+                           -- Intial solution generated randomly \\pdfTeX warni
+ng (ext4): destination with the same identifier (name{figure.4}) has been alrea
+dy used, duplicate ignored
+
+\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
+                                                  
+l.22 \textbf{InitialGuess}
+                           -- Intial solution generated randomly \\ <./15cities
+.png> <./25cities.png> <./100cities.png> <./25cities_A.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 42--48
 
  []
 
-)
-Overfull \hbox (46.08937pt too wide) in paragraph at lines 52--39
-\T1/cmr/m/n/10 vis-ited once be-fore, then $\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 O
-ld[]Value \OMS/cmsy/m/n/10 ^^C \OML/cmm/m/it/10 Number[]Of[]Visits \OT1/cmr/m/n
-/10 + \OML/cmm/m/it/10 New[]Child[]Value\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1
-/cmr/m/n/10 (\OML/cmm/m/it/10 Number[]Of[]Visits \OT1/cmr/m/n/10 +
- []
-
-[2pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
-has been already used, duplicate ignored
-
-\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
-                                                  
-l.39 
-     pdfTeX warning (ext4): destination with the same identifier (name{figure.2
-}) has been already used, duplicate ignored
-
-\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
-                                                  
-l.39 
-     pdfTeX warning (ext4): destination with the same identifier (name{figure.3
-}) has been already used, duplicate ignored
-
-\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
-                                                  
-l.39 
-     pdfTeX warning (ext4): destination with the same identifier (name{figure.4
-}) has been already used, duplicate ignored
-
-\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
-                                                  
-l.39 
-      <./15cities.png> <./25cities.png> <./100cities.png> <./25cities_A.png>]
-(./15Cities.tex [3] <15City_SA.png, id=108, 578.16pt x 433.62pt>
+) [2] (./15Cities.tex <15City_SA.png, id=102, 578.16pt x 433.62pt>
 File: 15City_SA.png Graphic file (type png)
 
 <use 15City_SA.png>
 Package pdftex.def Info: 15City_SA.png used on input line 34.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <15City_EA.png, id=109, 578.16pt x 433.62pt>
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
+ <15City_EA.png, id=103, 578.16pt x 433.62pt>
 File: 15City_EA.png Graphic file (type png)
 
 <use 15City_EA.png>
 Package pdftex.def Info: 15City_EA.png used on input line 40.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <15City_MCTS.png, id=110, 578.16pt x 433.62pt>
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
+ <15City_MCTS.png, id=104, 578.16pt x 433.62pt>
 File: 15City_MCTS.png Graphic file (type png)
 
 <use 15City_MCTS.png>
 Package pdftex.def Info: 15City_MCTS.png used on input line 46.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
- <15City_Solutions.png, id=111, 578.16pt x 433.62pt>
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
+ <15City_Solutions.png, id=105, 578.16pt x 433.62pt>
 File: 15City_Solutions.png Graphic file (type png)
 
 <use 15City_Solutions.png>
 Package pdftex.def Info: 15City_Solutions.png used on input line 52.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
-) (./25Cities.tex
-<25City_EA.png, id=112, 578.16pt x 433.62pt>
-File: 25City_EA.png Graphic file (type png)
- <use 25City_EA.png>
-Package pdftex.def Info: 25City_EA.png used on input line 25.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
-
-<25City_SA.png, id=113, 578.16pt x 433.62pt>
-File: 25City_SA.png Graphic file (type png)
- <use 25City_SA.png>
-Package pdftex.def Info: 25City_SA.png used on input line 31.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
-
-<25City_MCTS.png, id=114, 578.16pt x 433.62pt>
-File: 25City_MCTS.png Graphic file (type png)
- <use 25City_MCTS.png>
-Package pdftex.def Info: 25City_MCTS.png used on input line 37.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
-
-<25City_Solutions.png, id=115, 578.16pt x 433.62pt>
-File: 25City_Solutions.png Graphic file (type png)
- <use 25City_Solutions.png>
-Package pdftex.def Info: 25City_Solutions.png used on input line 43.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
-) [4pdfTeX warning (ext4): destination with the same identifier (name{table.1})
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
+) [3pdfTeX warning (ext4): destination with the same identifier (name{table.1})
  has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.44 
-     pdfTeX warning (ext4): destination with the same identifier (name{figure.5
-}) has been already used, duplicate ignored
+l.42 
+     ] (./25Cities.tex <25City_EA.png, id=113, 578.16pt x 433.62pt>
+File: 25City_EA.png Graphic file (type png)
+
+<use 25City_EA.png>
+Package pdftex.def Info: 25City_EA.png used on input line 25.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
+ <25City_SA.png, id=114, 578.16pt x 433.62pt>
+File: 25City_SA.png Graphic file (type png)
+
+<use 25City_SA.png>
+Package pdftex.def Info: 25City_SA.png used on input line 31.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
+ <25City_MCTS.png, id=115, 578.16pt x 433.62pt>
+File: 25City_MCTS.png Graphic file (type png)
+
+<use 25City_MCTS.png>
+Package pdftex.def Info: 25City_MCTS.png used on input line 37.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
+ <25City_Solutions.png, id=116, 578.16pt x 433.62pt>
+File: 25City_Solutions.png Graphic file (type png)
+
+<use 25City_Solutions.png>
+Package pdftex.def Info: 25City_Solutions.png used on input line 43.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
+) [4pdfTeX warning (ext4): destination with the same identifier (name{figure.5}
+) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
@@ -864,25 +857,25 @@ File: 25ACity_EA.png Graphic file (type png)
 
 <use 25ACity_EA.png>
 Package pdftex.def Info: 25ACity_EA.png used on input line 27.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
  <25ACity_SA.png, id=131, 578.16pt x 433.62pt>
 File: 25ACity_SA.png Graphic file (type png)
 
 <use 25ACity_SA.png>
 Package pdftex.def Info: 25ACity_SA.png used on input line 33.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
  <25ACity_MCTS.png, id=132, 578.16pt x 433.62pt>
 File: 25ACity_MCTS.png Graphic file (type png)
 
 <use 25ACity_MCTS.png>
 Package pdftex.def Info: 25ACity_MCTS.png used on input line 39.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
  <25ACity_Solutions.png, id=133, 578.16pt x 433.62pt>
 File: 25ACity_Solutions.png Graphic file (type png)
 
 <use 25ACity_Solutions.png>
 Package pdftex.def Info: 25ACity_Solutions.png used on input line 45.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
 ) [5pdfTeX warning (ext4): destination with the same identifier (name{figure.9}
 ) has been already used, duplicate ignored
 
@@ -919,25 +912,25 @@ File: 100City_EA.png Graphic file (type png)
 
 <use 100City_EA.png>
 Package pdftex.def Info: 100City_EA.png used on input line 27.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
  <100City_SA.png, id=148, 578.16pt x 433.62pt>
 File: 100City_SA.png Graphic file (type png)
 
 <use 100City_SA.png>
 Package pdftex.def Info: 100City_SA.png used on input line 33.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
  <100City_MCTS.png, id=149, 578.16pt x 433.62pt>
 File: 100City_MCTS.png Graphic file (type png)
 
 <use 100City_MCTS.png>
 Package pdftex.def Info: 100City_MCTS.png used on input line 39.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
  <100City_Solutions.png, id=150, 578.16pt x 433.62pt>
 File: 100City_Solutions.png Graphic file (type png)
 
 <use 100City_Solutions.png>
 Package pdftex.def Info: 100City_Solutions.png used on input line 45.
-(pdftex.def)             Requested size: 172.84813pt x 129.63046pt.
+(pdftex.def)             Requested size: 195.89456pt x 146.91937pt.
  [6pdfTeX warning (ext4): destination with the same identifier (name{figure.13}
 ) has been already used, duplicate ignored
 
@@ -1018,11 +1011,11 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 54.
 Here is how much of TeX's memory you used:
  16655 strings out of 493304
  288725 string characters out of 6139871
- 388311 words of memory out of 5000000
+ 389313 words of memory out of 5000000
  19707 multiletter control sequences out of 15000+600000
  14428 words of font info for 37 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 63i,15n,57p,715b,361s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 63i,15n,57p,1121b,356s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/
@@ -1032,7 +1025,7 @@ b></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/
 fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/public/c
 m-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1728.pfb
 >
-Output written on HW2.pdf (7 pages, 1072995 bytes).
+Output written on HW2.pdf (7 pages, 1073332 bytes).
 PDF statistics:
  225 PDF objects out of 1000 (max. 8388607)
  165 compressed objects within 2 object streams

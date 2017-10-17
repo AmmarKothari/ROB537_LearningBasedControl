@@ -5,7 +5,7 @@ For 15 cities, the algorithms all perform decently well.  The evolutionary algor
 
 One reason for EA's better performance is that it holds many more solutions in memory at a time and can compare them against each other.  The other methods hold only one or two solutions at a time and make comparisons based on those two only.  In this implementation of EA, the best solution can never be removed.  If an optimal solution is discovered, it will not be discarded which is true for MCTS, but not SA.  In all cases, EA decreases in distance the quickest.  This may be due to having acces to many solutions that it can quickly hone in on a promising solution.  Although, this may be problematic later on if this is a local minimum.
 
-SA may struggle to get to the optimal solution if it is currently at a state that is near the optimal solution.  If more than a single switch of two consecutive states is requried to achieve a solution, then SA is unlikely to get to that solution.
+SA may struggle to get to the optimal solution if it is currently at a state that is near the optimal solution.  If more than a single switch of two consecutive states is requried to achieve a solution, SA is unlikely to get to that solution.
 
 MCTS has to hold a tree structure which can get quite large in memory.  Each iteration can add a new node to the tree and requires several calculations to update the tree with every iteration.  
 
