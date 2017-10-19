@@ -13,7 +13,7 @@ from multiprocessing import Process
 import math
 ITER_LIMIT = 100000
 REPEAT = 10
-ITERATIONS = [int(1e4), int(1e4), int(1e5)]
+ITERATIONS = [int(1e4), int(1e4), int(1e6)]
 
 class fileReader(object):
 	def __init__(self, fn):
@@ -538,7 +538,7 @@ class PlotsForHomework(object):
 				[writer.writerow([t]) for t in times]
 
 	def CitiesResults(self):
-		for fn_prefix,data_file in zip(self.scenarios,self.fn_list):
+		for fn_prefix,data_file,it in zip(self.scenarios,self.fn_list,ITERATIONS):
 			# prints out results from 15 cities test for each algorithm
 			folders = ['%s_Results/' %i for i in ('SA','EA','MCTS')]
 			# folders = ['%s_Results/' %i for i in ('SA','MCTS')]
@@ -575,7 +575,7 @@ class PlotsForHomework(object):
 			ax1.set_title('%s Cities Solution Search Progress' %fn_prefix)
 			ax1.set_xlabel('Iterations')
 			ax1.set_ylabel('Solution Distance')
-			ax1.set_xlim([0, ITERATIONS])
+			ax1.set_xlim([0, it])
 			ax1.get_figure().savefig('%sCity_Solutions.png' %fn_prefix)
 			plt.close(ax1.get_figure())
 			# plt.show()
@@ -664,8 +664,8 @@ if __name__ == '__main__':
 
 	p = []
 	p.append(Process(target=PFH.SASolutions_multiple))
-	p.append(Process(target=PFH.EASolutions_multiple))
-	p.append(Process(target=PFH.MCTSSoltuions_multiple))
+	# p.append(Process(target=PFH.EASolutions_multiple))
+	# p.append(Process(target=PFH.MCTSSoltuions_multiple))
 	[P.start() for P in p]
 	[P.join() for P in p]
 
