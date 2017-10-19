@@ -1,0 +1,47 @@
+%!TEX root = ./HW2.tex
+
+\section{25 Cities}
+\subsection{Results}
+For 25 cities, the solution quality decreases.  All of the methods are not that close to the optimal solution.  EA again performs the best.  
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Algorithm               & \begin{tabular}[c]{@{}c@{}}Total Solutions\\ Generated\end{tabular} & \begin{tabular}[c]{@{}c@{}}Average Min\\ Distance\end{tabular} & St Dev & \begin{tabular}[c]{@{}c@{}}Average\\ Run Time (s)\end{tabular} & St Dev  \\ \hline
+Simulated Annealing     & 10,000                                                              & 10,598                                                         & 1,567  & 3.84e-6                                                    & 6.07e-7 \\ \hline
+Evolutionary Algorithm  & 10,000                                                              & 8,035                                                          & 581    & 10.05                                                      & 0.08    \\ \hline
+Monte Carlo Tree Search & 10,000                                                              & 8,693                                                          & 529    & 3.76                                                       & 0.19    \\ \hline
+\end{tabular}
+\caption{Comparison of Solution Quality and Run Time for Each Method with 25 Cities}
+\label{tab:25Comparison}
+\end{table}
+
+% insert image of example solutions found by search
+
+\begin{figure}[H]
+	\centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{25City_EA.png} % first figure itself
+        \caption{Best Solution for 25 Cities with Evolutionary Algorithm}
+        \label{fig:25city_EA}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{25City_SA.png} % second figure itself
+        \caption{Best Solution for 25 Cities with Simulated Annealing}
+        \label{fig:25city_SA}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{25City_MCTS.png} % third figure itself
+        \caption{Best Solution for 25 Cities with MCTS}
+        \label{fig:25city_MCTS}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{25City_Solutions.png}
+		\caption{Solution Progression for 25 Cities}
+		\label{fig:25city_Solution}
+    \end{minipage}\hfill
+\end{figure}
