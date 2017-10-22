@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 import copy
 import multiprocessing as mp
 import pygame
-
+import copy
+import matplotlib.patches as mpatches
+from matplotlib.collections import PatchCollection
 
 class SlotMachine(object):
 	# defines a single slot machine in N armed bandit problem
@@ -166,13 +168,16 @@ class GridWorldVisualizer(object):
 		self.h = 500
 		self.size = (self.w,self.h)
 
-		self.show = show
-		if show:
-			self.done = False
-			self.screen = pygame.display.set_mode(self.size)
-			pygame.display.set_caption("Grid World")
-			self.clock = pygame.time.Clock()
-			self.startWorld()
+		self.done = False
+		self.screen = pygame.display.set_mode(self.size)
+		pygame.display.set_caption("Grid World")
+		self.clock = pygame.time.Clock()
+
+	def setWorld(self, world):
+		self.world = world
+
+	def setTrajectories(self, traj_list):
+		self.trajs = traj_list
 
 	def startWorld(self):
 		while not self.done:
@@ -181,25 +186,32 @@ class GridWorldVisualizer(object):
 					self.done = True
 			self.screen.fill(self.WHITE)
 			self.drawWorld()
+			self.drawGoal()
 			pygame.display.flip()
 			self.clock.tick(60)
 		pygame.quit()
 
 	def drawWorld(self):
 		#draws the basic world
-		h_lines = np.linspace(0,self.h,self.grid[0]+1)
+		h_lines = np.linspace(0,self.h,self.world.grid[0]+1)
 		# pdb.set_trace()
 		for h in h_lines:
 			pygame.draw.line(self.screen, self.GREEN, [0, h], [self.w, h], 5)
 
-		v_lines = np.linspace(0,self.w,self.grid[1]+1)
+		v_lines = np.linspace(0,self.w,self.world.grid[1]+1)
 		for v in v_lines:
 			pygame.draw.line(self.screen, self.GREEN, [v, 0], [v, self.w], 5)
 
+	def drawGoal(self):
+		x = self.h / (self.world.grid[0] + 1) * self.world.goal[0]
+		y = self.w / (self.world.grid[1] + 1) * self.world.goal[1]
+		pygame.draw.rect(self.screen, self.RED, (x, y, 20, 20))
 
-class GridWorldPlayer(BanditPlayer):
+
+
+class GridWorldPlayerAV(BanditPlayer):
 	def __init__(self, world):
-		super(GridWorldPlayer, self).__init__(world)
+		super(GridWorldPlayerAV, self).__init__(world)
 		self.world = world
 		self.grid = self.world.grid #hxw
 		self.locations = np.array([ [ [x,y] for y in range(self.grid[1])] for x in range(self.grid[0])]).flatten().reshape(-1,2)
@@ -208,45 +220,176 @@ class GridWorldPlayer(BanditPlayer):
 		a = np.random.randint(self.world.num_actions)
 		return a
 
-	def EpsilonGreedyChooseAction(self, epsilon):
+	def EpsilonGreedyChooseAction(self, epsilon, table=None):
+		if table is None:
+			table = self.ActionValueTable
 		if np.random.rand(1) < epsilon:
 			# choose at random
 			action = np.random.randint(self.num_actions)
 		else:
 			# always chooses the first max that it finds in list
-			action = np.argmax(self.ActionValueTable)
+			action = np.argmax(table)
 		return action
+
+	def QTable_update(self, action, pos, r, update = True):
+		# updates that value in the Q table
+		val = self.QTable[pos[0], pos[1], action]
+		# max_next = 0
+		# for i1 in (0,1,-1):
+		# 	for i2 in (0,1,-1):
+		# 		max_next = self.QTable[pos[0]+i1]
+		val = val + self.alpha * (r - val)
+		if update: self.QTable[pos[0], pos[1], action] = val
+		return val
+
+	def convergeAV(self, steps, epsilon, N):
+		if self.alpha is None:
+			raise(ValueError('Must set alpha value first with V_settings'))
+		traj_all = []
+		for i in range(N):
+			traj = []
+			pos = self.world.startLocation()
+			traj.append(pos)
+			for s in range(steps):
+				a = self.EpsilonGreedyChooseAction(epsilon)
+				pos = self.world.updatePosition(a)
+				r = self.world.getReward(pos)
+				self.V_update(a, r)
+			traj_all.append(traj)
+		return traj_all
+
+	def convergeQtable(self, steps, epsilon, N):
+		self.QTable = np.ones((self.grid[0], self.grid[1], self.world.num_actions)) * 1.0
+		if self.alpha is None:
+			raise(ValueError('Must set alpha value first with V_settings'))
+		traj_all = []
+		for i in range(N):
+			traj = []
+			pos = self.world.startLocation()
+			traj.append(pos)
+			for s in range(steps):
+				a = self.EpsilonGreedyChooseAction(epsilon, table=self.QTable[self.world.pos[0], self.world.pos[1]])
+				pos = self.world.updatePosition(a)
+				r = self.world.getReward(pos)
+				self.QTable_update(a, pos, r)
+				traj.append(copy.deepcopy(pos))
+			traj_all.append(traj)
+		# ax = self.plotQTable(self.QTable, show = False)
+		# for i in range(10):
+		# 	self.plotTrajectory(traj_all[-i], ax)
+		# pdb.set_trace()
+		# plt.show()
+		return traj_all
+
+	def plotQTable(self, table, ax = None, show = True):
+		if ax is None:
+			ax = plt.subplot(1,1,1)
+		f = ax.get_figure()
+		X,Y = np.meshgrid(np.arange(self.grid[0]), np.arange(self.grid[1]))
+		U = np.zeros_like(X)
+		V = np.zeros_like(Y)
+		for ix,x in enumerate(range(self.grid[0])):
+			for iy,y in enumerate(range(self.grid[1])):
+				a_best = np.argmax(self.QTable[x,y])
+				u,v = self.world.action_list[a_best]
+				try:
+					U[iy,ix] = u
+					V[iy,ix] = v
+				except:
+					print("%s, %s" %(ix,iy))
+		ax.quiver(X,Y,U,V)
+		r = 0.25
+		for ix in np.arange(self.grid[0]):
+			for iy in np.arange(self.grid[1]):
+				if self.world.reward[ix,iy] > 0:
+					circle = mpatches.Circle((ix,iy),r,ec="none")
+		ax.add_patch(circle)
+		if show: plt.show()
+		return ax
+
+	def plotTrajectory(self, traj, ax):
+		for i_t in range(len(traj)-1):
+			xs = [traj[i_t][0], traj[i_t+1][0]]
+			ys = [traj[i_t][1], traj[i_t+1][1]]
+			ax.plot(xs,ys,'b-')
+
+	def plotTrajectoryHeatMap(self, trajs, ax):
+		heatmap = np.zeros((self.world.grid[0], self.world.grid[1]))
+		for traj in trajs:
+			for x,y in traj:
+				heatmap[x,y] += 1
+		heatmap /= np.max(heatmap)
+		# dark is zero
+		ax.imshow(heatmap, cmap='hot', interpolation='nearest')
+	
+	def plotTrajectory(self, traj, ax): # DO THIS FIRST!
+
+
+	def testEGreedy(self, epsilon):
+		pprint([self.EpsilonGreedyChooseAction(epsilon) for i in range(100)])
+
+
+	def plotVATable(self, VA, show=True):
+		width = 1.0
+		ax = plt.subplot(1,1,1)
+		f = ax.get_figure()
+		ind = np.arange(self.num_actions)
+
+		ax.bar(ind, VA, width, color='r', label='ValueAction')
+		# ax.bar(ind+width, self.Bandit.means, color='b', yerr=self.Bandit.variances)
+		plt.legend()
+		if show: plt.show()
+		return ax
 
 
 class World_1(object):
 	def __init__(self):
 		self.grid = (5,10)
+		self.goal = (1, 9)
 		self.world = np.zeros(self.grid)
 		self.reward = np.ones(self.grid) * -1
-		self.reward[1, -1] = 100 #location of door
-		self.world[1,-1] = 1
-		x,y = self.startLocation()
-		self.world[x,y] = 2
-
-
+		self.reward[-2, -1] = 100 #location of door
+		self.world[-2,-1] = 1
+		self.pos = self.startLocation()
+		self.world[self.pos[0],self.pos[1]] = 2
 		# 0 = No move
 		# 1 = Up
 		# 2 = Right
 		# 3 = Down
 		# 4 = Left
 		self.num_actions = 5
+		self.action_list = {0:[0,0], 1:[0,1], 2:[1,0], 3:[0,-1], 4:[-1,0]}
 
 	def startLocation(self):
-		return self.randomLocation()
+		self.pos = self.randomLocation()
+		return self.pos
 
 	def randomLocation(self):
 		x = np.random.randint(self.grid[0])
 		y = np.random.randint(self.grid[1])
-		return (x,y)
+		return np.array([x,y])
 
-	def reward(self, xy):
+	def getReward(self, xy):
 		# returns the reward at that location
-		return self.reward[xy[0], xy[1]]
+		r = self.reward[xy[0], xy[1]]
+		return r
+
+	def test(self):
+		pprint([self.reward[(np.random.randint(self.grid[0]), np.random.randint(self.grid[1]))] for i in range(100)])
+
+	def updatePosition(self, a):
+		move = self.action_list[a]
+		self.pos += move
+		if self.pos[0] < 0:
+			self.pos[0] = 0
+		elif self.pos[0] >= self.grid[0]:
+			self.pos[0] = self.grid[0]-1
+		if self.pos[1] < 0:
+			self.pos[1] = 0
+		elif self.pos[1] >= self.grid[1]:
+			self.pos[1] = self.grid[1]-1
+		return self.pos
+
 
 
 
@@ -277,8 +420,17 @@ if __name__ == '__main__':
 
 	# G = GridWorld((5,10))
 	W = World_1()
-	pprint([W.reward[(np.random.randint(5), np.random.randint(10))] for i in range(100)])
+	GW = GridWorldPlayerAV(W)
+	GW.V_settings(0.2)
+	# GW.converge(20, 0.2, 100)
+	# GW.plotVATable(GW.ActionValueTable)
+	# pprint(GW.ActionValueTable)
+	ax = plt.subplot(1,1,1)
+	traj_all = GW.convergeQtable(20, 0.1, 1000)
 
 
-
+	GW.plotTrajectoryHeatMap(traj_all[-100:], ax)
+	# GWV = GridWorldVisualizer()
+	# GWV.setWorld(W)
+	# GWV.startWorld()
 
