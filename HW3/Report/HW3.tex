@@ -25,30 +25,17 @@
 \begin{document}
 \maketitle
 
+
 \section{Introduction}
-Optimization through search is an important part of modern engineering.  With the advent of modern computers, people are able to generate and evaluate many solutions.  Search has been used widely in fields like engineering and finance, but has also found uses in politics \cite{totenberg_2017}.  Search is an integral part of finding solutions to challenging problems today.
-
-In this assignment, I apply three search algorithms to solve a Travelling Salesman Problem (TSP) with 15, 25, or 100 cities that are dispersed somewhat evenly through the map.  A fourth scenario with 25 cities is structured in a way to make the solution easily identifiable.  Figure \ref{fig:15cities}, \ref{fig:25cities}, \ref{fig:100cities}, \ref{fig:25Acities} show the layout of the cities in each scenario.  The three algorithms investigated are Simulated Annealing, Genetic Algorithms, and Monte Carlo Tree Search.
-
-\section{Problem Description}
-TSP is meant to replicate the challenge of a traveller trying to visit many places without revisiting any locations.  Accordingly, the solution must contain every city only once, except for the start location.  The path must start and end at the same location.  The goal is to minimize the total cost of the path.  In this case, the cost is the distance travelled.
-
-\input{MapPlots.tex}
-
-\input{Algorithms.tex}
 
 
-\input{15Cities.tex}
+\input{Bandit.tex}
 
-\input{25Cities.tex}
+\input{GridWorld.tex}
 
-\input{25ACities.tex}
+\section{Conclusion}
 
-\input{100Cities.tex}
-
-\input{SolutionSize.tex}
-
-\bibliographystyle{unsrt}
-\bibliography{HW2}
+% \bibliographystyle{unsrt}
+% \bibliography{HW2}
 
 \end{document}	
