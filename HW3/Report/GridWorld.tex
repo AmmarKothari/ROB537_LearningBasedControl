@@ -7,8 +7,24 @@ For grid world, two different types of learners are tested.  The first only esti
 In Grid World, the agent is spawned at a random location in the world.  The goal is a location on the map.  Every location that is not the goal gives a reward of -1 and the goal gives a reward of 100.  The length of an episode is 100 steps.  At the end of an episode, the location of the agent is randomly placed on the map.
 
 \subsection{Results}
-The expected value of the action learner is shown in Figure \ref{}.  
+The learning progression is shown in Figure \ref{fig:GridLearn}.  The Q-Learning agent performs better than the Action Value agent.  An example trajector after training is completed is shown in \ref{}.
 
-\input{ActionValueGridWorld.tex}
+\subsection{Analysis}
+Action Value learning basically learns how to stay in the middle of the map and rarely moves left.  This is because at every spot, moving left is not the optimal action.  The action value learner does not associate rewards with state and as a result, moves around the center of the map without moving towards the goal.  This is shown by the example trajectories in Figure \ref{}.
+
+Q learning performs much better.  The trade off is that significantly more information must be stored compared to the Action Value learner.
+
+
+\begin{figure}[h]
+\includegraphics{AVGrid.png}
+\caption{Learning progress of both agents on grid world.  Q learning agent is able to improve over the course of training, where as the Action Value agent never improves significantly.}
+\label{fig:GriudLearn}
+\end{figure}
+
+\begin{figure}[h]
+\includegraphics{AVGridSolution.png}
+\caption{Action value table quiver plot for epsilon greedy agent for 20 steps.  Arrows are weighted average of the best action at that state.}
+\label{fig:AVGridSolution}
+\end{figure}
 
 \input{Qlearner.tex}

@@ -104,15 +104,32 @@ class BanditPlayer(object):
 		print('Average Reward: %s, StDev: %s' %(np.mean(rs), np.std(rs)))
 		return rs
 
-	def plotVATable(self, VA, show=True):
-		width = 1.0/len(VA)
+	def plotVATable(self, VAs, show=True):
+		width = 1.0/(1 + len(VAs))
+		for iVA,VA in enumerate(VAs):
+			ax = plt.subplot(1,1,1)
+			f = ax.get_figure()
+			ind = np.arange(self.num_actions)
+
+			ax.bar(ind+iVA*width, VA, width, color='r', label='ValueAction')
+		ax.bar(ind+(iVA+1)*width, self.Bandit.means, width, color='b', label='BanditMeans')
+			# ax.bar(ind+width, self.Bandit.means, color='b', yerr=self.Bandit.variances)
+		plt.legend()
+		if show: plt.show()
+		return ax
+
+	def plotVATable_errors(self, VAs, show=True):
+		pdb.set_trace()
+		width = 1.0/(1 + len(VAs))
 		ax = plt.subplot(1,1,1)
 		f = ax.get_figure()
 		ind = np.arange(self.num_actions)
-
-		ax.bar(ind, VA, width, color='r', label='ValueAction')
-		ax.bar(ind+width, self.Bandit.means, width, color='b', label='BanditMeans')
-		# ax.bar(ind+width, self.Bandit.means, color='b', yerr=self.Bandit.variances)
+		ax.bar(ind+(len(VAs)+1)*width, self.Bandit.means, width, color='b', label='BanditMeans')
+		for iVA,VA in enumerate(VAs):
+			VA_mean = np.mean(VA, axis = 0)
+			VA_std = np.std(VA, axis = 0)
+			ax.bar(ind+iVA*width, VA_mean, width, label='Value Action ', yerr=VA_std)
+			# ax.bar(ind+width, self.Bandit.means, color='b', yerr=self.Bandit.variances)
 		plt.legend()
 		if show: plt.show()
 		return ax
@@ -124,9 +141,11 @@ class BanditPlayer(object):
 				writer.writerow(run)
 
 	def loadAVTable(self, fn):
+		AVTable = []
 		with open(fn, 'rb') as csvfile:
 			reader = csv.reader(csvfile)
-			AVTable = next(reader)
+			for row in reader:
+				AVTable.append(np.array(row).astype(float))
 		return AVTable
 
 class BanditPlayerMP(BanditPlayer):
@@ -292,10 +311,20 @@ class GridWorldPlayer(BanditPlayer):
 			txt2.remove()
 			last_step = step
 
+	def loadTraj(self, fn):
+		Trajs = []
+		with open(fn, 'rb') as csvfile:
+			reader = csv.reader(csvfile)
+			for row in reader:
+				traj = np.array([np.array(r.strip('[]').split()).astype(int) for r in row]).reshape(-1,2)
+				Trajs.append(traj)
+		return Trajs
 
-
-	# def plotLearning(self, traj_all, ax):
-	# 	for traj in traj_all:
+	def episodeReward(self, traj):
+		R = 0.0
+		for t in traj:
+			R += self.world.getReward(t)
+		return R
 
 
 	def saveTraj(self, traj_all, fn):
@@ -604,7 +633,6 @@ class GridWOrldPlayerQ_Multi(GridWorldPlayerQ):
 			self.P.append(mp.Process(target=self.singleEpisodeLoop, args=(steps,epsilon,self.child_conn[proc])))
 			self.P[-1].start()
 		self.allProcessesAlive()
-
 		traj_all = []
 		# add Q table to each one
 		[self.parent_conn[proc].send(self.QTable) for proc in range(self.procs)]
@@ -700,12 +728,20 @@ class World_1(object):
 
 
 class PlotsForHomework(object):
+	def __init__(self):
+		self.means = [1, 1.5, 2, 2, 1.75]
+		self.variances = [5, 1, 1, 2, 10]
+		self.B = Bandit(self.means, self.variances)
+		self.W = World_1()
+		self.GW = GridWorldPlayerAV(self.W)
+		self.GWMQ = GridWOrldPlayerQ_Multi(self.W)
+
 	def CollectDataBandit(self):
 		# collect all the data needed to produce plots
 		learning_rate = 0.2
 		means = [1, 1.5, 2, 2, 1.75]
 		variances = [5, 1, 1, 2, 10]
-		B = Bandit(means, variances)
+		B = self.B
 		BP = BanditPlayer(B)
 		BP.V_settings(learning_rate)
 		stat_runs = 10
@@ -721,14 +757,12 @@ class PlotsForHomework(object):
 				print('Completed -- Iterations: %s, Steps: %s, Epsilon: %s' %(iterations, steps, epsilon))
 
 	def CollectAVLearningData(self):
-		W = World_1()
 		learning_rate = 0.2
 		steps = 20
 		epsilon = 0.2
 		steps = 20
 		iterations = 1e4
 		## AV Player ##
-		GW = GridWorldPlayerAV(W)
 		GW.V_settings(learning_rate)
 		stat_runs = 10
 		fn = ('Data/gridAV_a%0.1f_e%0.1f_c%s' %(learning_rate,epsilon,int(iterations))).replace('.','D')+'.csv'
@@ -740,7 +774,6 @@ class PlotsForHomework(object):
 			GW.saveTraj(traj_all, fn.replace('.csv', '_traj%s.csv' %stat))
 			print('Completed Stat Run %s' %stat)
 		GW.saveAVTable(fn, AV_tables)
-
 
 	def CollectQLearningData(self):
 		W = World_1()
@@ -771,26 +804,122 @@ class PlotsForHomework(object):
 		# GWM.plotTrajSim(traj_all_test[-1], ax)
 		# plt.show()
 
-
-
 	def PlotBandit(self):
+		B = self.B
+		BP = BanditPlayer(B)
+		fn10_e2 = 'Data/bandit_a0D2_e0D2_c100000.csv'
+		fn100_e2 = 'Data/bandit_a0D2_e0D2_c10000.csv'
+		table10 = BP.loadAVTable(fn10_e2)
+		R10 = [np.mean(BP.test_VA(10, 10)) for i in range(10)]
+		table100 = BP.loadAVTable(fn100_e2)
+		R100 = [np.mean(BP.test_VA(100, 10)) for i in range(10)]
+		# print rewards:
+		print('20% exploration reward')
+		print('10 step: %s +/- %s' %(np.mean(R10, axis=0), np.std(R10, axis=0)))
+		print('100 step: %s +/- %s' %(np.mean(R100, axis=0), np.std(R100, axis=0)))
 		# bar graph that compares both learners to the true value
-		BP.plotVATable(BP.ActionValueTable)
-		R = BP.test_VA(10, 10)
-		BP.converge(100, 0.2, 10000)
-		R = BP.test_VA(100, 10)
-		BP.plotVATable(BP.ActionValueTable)
+		width = 1.0/(3)
+		ax = plt.subplot(1,1,1)
+		f = ax.get_figure()
+		ind = np.arange(B.num_actions)
+		# plot mean values
+		ax.bar(ind, self.B.means, width, color='b', label='True Reward Distribution', hatch='/', yerr = self.B.variances)
+		# plot 10 step values
+		VA_mean_10 = np.mean(table10, axis = 0)
+		VA_std_10 = np.std(table10, axis = 0)
+		ax.bar(ind+1*width, VA_mean_10, width, color='r', label='10 Step Action Value', yerr=VA_std_10, hatch='.')
+		# plot 100 step values
+		VA_mean_100 = np.mean(table100, axis = 0)
+		VA_std_100 = np.std(table100, axis = 0)
+		ax.bar(ind+2*width, VA_mean_100, width, color='g', label='100 Step Action Value', yerr=VA_std_100, hatch='x')
+		plt.legend(loc="best")
+		ax.set_xlabel('Action')
+		ax.set_ylabel('Expected Reward')
+		ax.set_title('Comparison of Expected Reward for 20% Exploration')
+		ax.axes.autoscale(tight=True)
+		plt.savefig('Report/Bandit20.png')
+		plt.close()
+		# plt.show()
 
-		BPMP = BanditPlayerMP(B)
-		BPMP.V_settings(0.2)
-		BPMP.converge_multi(10, 0.2, 100)
-		pdb.set_trace()
+		fn10_e0 = 'Data/bandit_a0D2_e0D0_c100000.csv'
+		fn100_e0 = 'Data/bandit_a0D2_e0D0_c10000.csv'
+		table10 = BP.loadAVTable(fn10_e0)
+		R10 = [np.mean(BP.test_VA(10, 10)) for i in range(10)]
+		table100 = BP.loadAVTable(fn100_e0)
+		R100 = [np.mean(BP.test_VA(100, 10)) for i in range(10)]
+		# print rewards:
+		print('20% exploration reward')
+		print('10 step: %s +/- %s' %(np.mean(R10, axis=0), np.std(R10, axis=0)))
+		print('100 step: %s +/- %s' %(np.mean(R100, axis=0), np.std(R100, axis=0)))
+		# bar graph that compares both learners to the true value
+		width = 1.0/(3)
+		ax = plt.subplot(1,1,1)
+		f = ax.get_figure()
+		ind = np.arange(B.num_actions)
+		# plot mean values
+		ax.bar(ind, self.B.means, width, color='b', label='True Reward Distribution', hatch='/', yerr = self.B.variances)
+		# plot 10 step values
+		VA_mean_10 = np.mean(table10, axis = 0)
+		VA_std_10 = np.std(table10, axis = 0)
+		ax.bar(ind+1*width, VA_mean_10, width, color='r', label='10 Step Action Value', yerr=VA_std_10, hatch='.')
+		# plot 100 step values
+		VA_mean_100 = np.mean(table100, axis = 0)
+		VA_std_100 = np.std(table100, axis = 0)
+		ax.bar(ind+2*width, VA_mean_100, width, color='g', label='100 Step Action Value', yerr=VA_std_100, hatch='x')
+		plt.legend(loc="best")
+		ax.set_xlabel('Action')
+		ax.set_ylabel('Expected Reward')
+		ax.set_title('Comparison of Expected Reward for 0% Exploration')
+		ax.axes.autoscale(tight=True)
+		plt.savefig('Report/Bandit0.png')
+		# plt.show()
 
-	# def PlotGridAV(self):
-		# GW.plotVATable(GW.ActionValueTable)
-		# pprint(GW.ActionValueTable)
-		# ax = plt.subplot(1,1,1)
-		# traj_all = GW.convergeQtable(20, 0.1, 1000)
+	def PlotGridLearning(self):
+		GW = self.GW
+		points_per = 10
+		traj_count = 2
+		total_iter = 500
+		# total_iter = len(Trajs_all[0])
+		# plot the AV Learner
+		fn = 'Data/gridAV_a0D2_e0D2_c10000_traj%s.csv'
+		Trajs_all = [GW.loadTraj(fn %i) for i in range(traj_count)]
+		R = np.zeros(total_iter)
+		for Trajs in Trajs_all:
+			r = [GW.episodeReward(Traj) for Traj in Trajs[:total_iter]]
+			R += np.array(r)
+		R /= float(traj_count)
+		R_mean = np.mean(R.reshape(-1,points_per), axis = 1)
+		R_std = np.std(R.reshape(-1,points_per), axis = 1)
+
+		ax = plt.subplot(1,1,1)
+		f = ax.get_figure()
+		x = np.arange(len(R_mean))*points_per
+		ax.errorbar(x, R_mean, yerr=R_std, fmt='ro', label='Action Value Agent')
+
+		# plot the Q Learner
+		fn = 'Data/QLearner_a0D2_d0D9_e0D2_c10000_traj%s.csv'
+		Trajs_all = [GW.loadTraj(fn %i) for i in range(traj_count)]
+		R = np.zeros(total_iter)
+		for Trajs in Trajs_all:
+			r = [GW.episodeReward(Traj) for Traj in Trajs[:total_iter]]
+			R += np.array(r)
+		R /= float(traj_count)
+		R_mean = np.mean(R.reshape(-1,points_per), axis = 1)
+		R_std = np.std(R.reshape(-1,points_per), axis = 1)
+
+		ax = plt.subplot(1,1,1)
+		f = ax.get_figure()
+		x = np.arange(len(R_mean))*points_per
+		ax.errorbar(x, R_mean, yerr=R_std, fmt='bx', label='Q Learning Agent')
+
+		# format plot
+		ax.set_xlabel('Iterations')
+		ax.set_ylabel('Total Episode Reward')
+		ax.set_title('Learning Progress on Grid World')
+		ax.axes.autoscale(tight=True)
+		plt.legend(loc="best")
+		plt.savefig('Data/GridWorldLearning.png')
+		plt.close()
 
 
 
@@ -800,9 +929,12 @@ class PlotsForHomework(object):
 
 if __name__ == '__main__':
 	PFH = PlotsForHomework()
-	PFH.CollectDataBandit()
-	PFH.CollectAVLearningData()
-	PFH.CollectQLearningData()
+	# PFH.CollectDataBandit()
+	# PFH.CollectAVLearningData()
+	# PFH.CollectQLearningData()
+	# PFH.PlotBandit()
+	PFH.PlotGridLearning()
+
 
 	## Q Learner Player ##
 	# GW = GridWorldPlayerQ(W)
