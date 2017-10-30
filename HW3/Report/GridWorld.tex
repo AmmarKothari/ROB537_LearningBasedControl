@@ -1,8 +1,13 @@
 %!TEX root = ./HW3.tex
 
 \section{Grid World}
-\subsection{Problem Description}
+For grid world, two different types of learners are tested.  The first only estimates the expected reward of actions.  The second estimates the rewards based on state action pairs.  The performance of the state action pair is better.
 
+\subsection{Problem Description}
+In Grid World, the agent is spawned at a random location in the world.  The goal is a location on the map.  Every location that is not the goal gives a reward of -1 and the goal gives a reward of 100.  The length of an episode is 100 steps.  At the end of an episode, the location of the agent is randomly placed on the map.
+
+\subsection{Results}
+The expected value of the action learner is shown in Figure \ref{}.  
 
 \input{ActionValueGridWorld.tex}
 
