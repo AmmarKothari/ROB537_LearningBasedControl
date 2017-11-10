@@ -10,6 +10,8 @@ import matplotlib.patches as mpatches
 from matplotlib.collections import PatchCollection
 import csv
 import time
+import seaborn as sns
+sns.set(style="whitegrid")
 
 class SlotMachine(object):
 	# defines a single slot machine in N armed bandit problem
@@ -274,8 +276,6 @@ class GridWorldPlayer(BanditPlayer):
 		for traj in trajs:
 			for x,y in traj:
 				heatmap[x,y] += 1
-		# pdb.set_trace()
-		# heatmap /= np.max(heatmap)
 		# light is zero
 		ax.imshow(heatmap.T, cmap='binary', interpolation='none', origin='lower')
 		self.plotPatch(self.world.goal, ax)
@@ -382,6 +382,23 @@ class GridWorldPlayerAV(GridWorldPlayer):
 				self.V_update(a, r)
 				traj.append(copy.deepcopy(pos))
 			traj_all.append(copy.deepcopy(traj))
+		return traj_all
+
+	def testAVTable(self, steps, N):
+		epsilon = 0 # no exploration when testing
+		traj_all = []
+		for i in range(N):
+			traj = []
+			pos = self.world.startLocation()
+			self.world.pos = pos
+			traj.append(pos)
+			for s in range(steps):
+				prev_pos = copy.deepcopy(pos)
+				a = self.EpsilonGreedyChooseAction(epsilon, table=self.ActionValueTable)
+				pos = self.world.updatePosition(a)
+				r = self.world.getReward(pos)
+				traj.append(copy.deepcopy(pos))
+			traj_all.append(traj)
 		return traj_all
 
 	def plotVATable(self, VA, show=True):
@@ -872,17 +889,17 @@ class PlotsForHomework(object):
 		ax.set_title('Comparison of Expected Reward for 0% Exploration')
 		ax.axes.autoscale(tight=True)
 		plt.savefig('Report/Bandit0.png')
-		# plt.show()
+		plt.close()
 
 	def PlotGridLearning(self):
 		GW = self.GW
 		points_per = 10
-		traj_count = 2
-		total_iter = 500
-		# total_iter = len(Trajs_all[0])
+		traj_count = 10
+		total_iter = 200
 		# plot the AV Learner
 		fn = 'Data/gridAV_a0D2_e0D2_c10000_traj%s.csv'
 		Trajs_all = [GW.loadTraj(fn %i) for i in range(traj_count)]
+		# total_iter = len(Trajs_all[0])
 		R = np.zeros(total_iter)
 		for Trajs in Trajs_all:
 			r = [GW.episodeReward(Traj) for Traj in Trajs[:total_iter]]
@@ -918,7 +935,50 @@ class PlotsForHomework(object):
 		ax.set_title('Learning Progress on Grid World')
 		ax.axes.autoscale(tight=True)
 		plt.legend(loc="best")
-		plt.savefig('Data/GridWorldLearning.png')
+		plt.savefig('Report/GridWorldLearning.png')
+		plt.close()
+
+	def PlotGridTraj(self):
+		sns.set(style="whitegrid")
+		GW = self.GWMQ
+		Qs_total = 10
+		ax = plt.subplot(1,1,1)
+		fn = 'Data/QLearner_a0D2_d0D9_e0D2_c10000_Q%s'
+		Q_all = [GW.loadQTable(fn %i) for i in range(Qs_total)]
+		test_traj = []
+		for i in range(100):
+			Q_i = np.random.randint(Qs_total)
+			GW.QTable = Q_all[Q_i]
+			traj = GW.testQTable(10, 10)
+			test_traj.append(traj)
+			GW.plotTrajectoryHeatMap(traj, ax)
+		ax.set_title('Example Trajectory for Q-Value Agent')
+		ax.set_xticks(np.arange(0,10,1)+0.5)
+		ax.set_xticklabels(np.arange(0,10,1))
+		ax.set_yticks(np.arange(0,5,1)+0.5)
+		ax.set_yticklabels(np.arange(0,5,1))
+		plt.savefig('Report/GridWorldQTraj.png')
+		plt.close()
+
+		GW = self.GW
+		ax = plt.subplot(1,1,1)
+		fn = 'Data/gridAV_a0D2_e0D2_c10000.csv'
+		with open(fn, 'rb') as csvfile:
+			reader = csv.reader(csvfile)
+			AVTables = [np.array(row).astype(float) for row in reader]
+		test_traj = []
+		for i in range(100):
+			AV_i = np.random.randint(Qs_total)
+			GW.ActionValueTable = AVTables[AV_i]
+			traj = GW.testAVTable(10, 10)
+			test_traj.append(traj)
+			GW.plotTrajectoryHeatMap(traj, ax)
+		ax.set_title('Example Trajectory for Action Value Agent')
+		ax.set_xticks(np.arange(0,10,1)+0.5)
+		ax.set_xticklabels(np.arange(0,10,1))
+		ax.set_yticks(np.arange(0,5,1)+0.5)
+		ax.set_yticklabels(np.arange(0,5,1))
+		plt.savefig('Report/GridWorldAVTraj.png')
 		plt.close()
 
 
@@ -934,6 +994,7 @@ if __name__ == '__main__':
 	# PFH.CollectQLearningData()
 	# PFH.PlotBandit()
 	PFH.PlotGridLearning()
+	PFH.PlotGridTraj()
 
 
 	## Q Learner Player ##

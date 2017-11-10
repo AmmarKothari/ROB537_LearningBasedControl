@@ -19,7 +19,7 @@
 \usepackage{algpseudocode}
 \usepackage{enumitem}
 
-\title{ROB537: HW2}
+\title{ROB537: HW3}
 \author{Ammar Kothari}
 \date{}
 \begin{document}
@@ -27,15 +27,13 @@
 
 
 \section{Introduction}
-
+Reinforcement learning is the ability to learn from the enviornment.  With a reward signal, an agent can figure out what actions are best to achieve the reward.  The key insight is to evaluate the value of a given conditions.  In this assignment, associating values with only an action and associating values with a state action pair are examined.  The agent trained with Q-learning which uses state action pairs achieves near optimal performance on the grid world domain.  The action value learner which only uses actions achieves good peformance on the N-armed bandit problem. 
 
 \input{Bandit.tex}
 
 \input{GridWorld.tex}
 
 \section{Conclusion}
-
-% \bibliographystyle{unsrt}
-% \bibliography{HW2}
+In general, Q learning is the more effective agent.  If the problem has only one state, an Action Value learning, which is a single state case of Q learning, will be able to solve the problem.  For simple grid world problems, Q-learning is able to find the optimal path from any location on the map to the reward.
 
 \end{document}	

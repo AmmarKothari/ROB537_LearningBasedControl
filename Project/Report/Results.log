@@ -1,0 +1,31 @@
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2017.9.18)  7 NOV 2017 09:39
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**/home/kotharia/Documents/Projects/ROB537_LearningBasedControl/Project/Report/
+Results.tex
+
+(/home/kotharia/Documents/Projects/ROB537_LearningBasedControl/Project/Report/R
+esults.tex
+LaTeX2e <2011/06/27>
+Babel <3.9h> and hyphenation patterns for 78 languages loaded.
+! Undefined control sequence.
+l.3 \section
+            {Toy Domain}
+? 
+! Emergency stop.
+l.3 \section
+            {Toy Domain}
+End of file on the terminal!
+
+ 
+Here is how much of TeX's memory you used:
+ 6 strings out of 493304
+ 362 string characters out of 6139871
+ 51880 words of memory out of 5000000
+ 3564 multiletter control sequences out of 15000+600000
+ 3640 words of font info for 14 fonts, out of 8000000 for 9000
+ 957 hyphenation exceptions out of 8191
+ 5i,0n,1p,124b,8s stack positions out of 5000i,500n,10000p,200000b,80000s
+!  ==> Fatal error occurred, no output PDF file produced!
+e produced!
